@@ -53,7 +53,9 @@
      EOL = 269,
      LPAR = 270,
      RPAR = 271,
-     FLOAT = 272
+     FLOAT = 272,
+     ID = 273,
+     ASSIGN = 274
    };
 #endif
 /* Tokens.  */
@@ -72,19 +74,22 @@
 #define LPAR 270
 #define RPAR 271
 #define FLOAT 272
+#define ID 273
+#define ASSIGN 274
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 11 "pond.y"
+#line 13 "pond.y"
 {
     int intval; 
     float fval; 
+    char strval[60]; 
 }
 /* Line 1529 of yacc.c.  */
-#line 88 "pond.tab.h"
+#line 93 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

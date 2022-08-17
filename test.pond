@@ -1,4 +1,7 @@
-print(5); 
-print(6); 
-print(7 * 3! + 5 + 4); 
-print(6 - 20 * 2);
+x = 7 * 3! + 5 + 4; 
+print(-1 * x);
+
+y = 9; 
+y = 6; 
+x = 3;
+print(x + y);

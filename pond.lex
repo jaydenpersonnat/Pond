@@ -33,10 +33,12 @@ DECIMAL     "0"|{digit}*"."{digit}+
 ")"    { return RPAR; }
 "!"    { return FACT; }
 "=="   { return EQUALS; }
+"="    { return ASSIGN; }
 "print" { return PRINT; }
 
 
 [0-9]+ { yylval.intval = atoi(yytext); return NUMBER; }
+{ID}   { strcpy(yylval.strval, yytext); return ID; }
 {DECIMAL} {yylval.fval = atof(yytext); return FLOAT; }
 
 
