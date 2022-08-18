@@ -5,6 +5,7 @@
 #include <string.h>
 #include <strings.h>
 #include <ctype.h> 
+#include <math.h>
 
 char buffer[INT_SIZE];
 
@@ -62,6 +63,14 @@ expr *binopeval(BINOP b_exp)
             return create_int_node(NUM, b_exp.left->integer.value / b_exp.right->integer.value); 
         case MODULO :
             return create_int_node(NUM, b_exp.left->integer.value % b_exp.right->integer.value); 
+        case POWER : 
+            return create_int_node(NUM, pow(b_exp.left->integer.value, b_exp.right->integer.value));
+        case EQUALTO : 
+            return create_bool_node(BOOL, b_exp.left->integer.value == b_exp.right->integer.value? true: false);
+        case GREATERTHAN:
+            return create_bool_node(BOOL, b_exp.left->integer.value > b_exp.right->integer.value? true: false);
+        case LESSTHAN:
+            return create_bool_node(BOOL, b_exp.left->integer.value < b_exp.right->integer.value? true: false);
     }
   
 }
@@ -98,11 +107,11 @@ char *to_concrete(expr *expression)
     {
         if (expression->boolean.value)
         {
-            strcpy(buffer, "true"); 
+            strcpy(buffer, "TRUE"); 
             free(expression);
             return buffer; 
         }
-        strcpy(buffer, "false"); 
+        strcpy(buffer, "FALSE"); 
 
         free(expression); 
         return buffer;

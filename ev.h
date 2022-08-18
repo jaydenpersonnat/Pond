@@ -7,12 +7,23 @@
 struct expr; 
 struct BINOP;
 
+enum uops{
+    ABSV,
+    FACTORIAL,
+    NEGATIVE, 
+
+};
+
 enum bops{
     PLUS,
     MINUS,
     TIMES,
     DIVIDE,
     MODULO, 
+    POWER, 
+    EQUALTO, 
+    LESSTHAN,
+    GREATERTHAN,
 };
 
 enum types{
