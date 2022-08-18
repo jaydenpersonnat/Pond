@@ -16,7 +16,7 @@
     int intval; 
     double fval; 
     char strval[60]; 
-    expr exp; 
+    expr *exp; 
 }
 
 %token NUMBER 
@@ -68,11 +68,11 @@ exp:
   | TRUE          { $$ = create_bool_node(BOOL, true);}
   | FALSE         { $$ = create_bool_node(BOOL, false);}
   | STRS          { $$ = create_str_node(STR, $1); }
-//  | exp ADD exp { $$ = $1 + $3; }
-//  | exp SUB exp { $$ = $1 - $3; }
-//  | exp MUL exp    {$$ = $1 * $3; }
-//  | exp DIV exp    {$$ = $1 / $3; }
-//  | exp MOD exp    {$$ = $1 % $3}
+  | exp ADD exp { $$ = create_binop_node(PLUS, $1, $3); }
+  | exp SUB exp { $$ = create_binop_node(MINUS, $1, $3); }
+  | exp MUL exp    {$$ = create_binop_node(TIMES, $1, $3); }
+  | exp DIV exp    {$$ = create_binop_node(DIVIDE, $1, $3); }
+  | exp MOD exp    {$$ = create_binop_node(MODULO, $1, $3);}
 //  | ABS exp ABS       {$$ = $2 >= 0? $2: - $2; }
 //  | exp POW exp    {$$ = pow($1, $3)}
 //  | exp FACT       {$$ = tgamma($1 + 1)}

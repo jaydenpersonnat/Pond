@@ -24,7 +24,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 %%
 "+"    { return ADD; }
 "-"    { return SUB; }
-"*"    { return MUL; }
+"x"    { return MUL; }
 "/"    { return DIV; }
 "%"    { return MOD; }
 "|"    { return ABS; }

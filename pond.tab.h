@@ -103,7 +103,7 @@ typedef union YYSTYPE
     int intval; 
     double fval; 
     char strval[60]; 
-    expr exp; 
+    expr *exp; 
 }
 /* Line 1529 of yacc.c.  */
 #line 110 "pond.tab.h"
