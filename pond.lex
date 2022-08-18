@@ -1,14 +1,13 @@
 %option noyywrap
 
 %{
+	#include "ev.h"
 	#include "pond.tab.h"
 
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
    #include <strings.h>
-
-
 
 %}
 
@@ -20,6 +19,7 @@ alnum 		{alpha}|{digit}
 
 ID 			{alpha}+{alnum}*
 DECIMAL     "0"|{digit}*"."{digit}+
+STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 
 %%
 "+"    { return ADD; }
@@ -31,15 +31,25 @@ DECIMAL     "0"|{digit}*"."{digit}+
 "^"    { return POW; }
 "("    { return LPAR; }
 ")"    { return RPAR; }
+"{"    { return LBRACK; }
+"}"    { return RBRACK; }
 "!"    { return FACT; }
 "=="   { return EQUALS; }
+">"    { return GREATER; }
+"<"    { return LESS; }
 "="    { return ASSIGN; }
+"TRUE"  { return TRUE; }
+"FALSE"  { return FALSE; }
+
 "print" { return PRINT; }
+
+"while" {return WHILE; }
 
 
 [0-9]+ { yylval.intval = atoi(yytext); return NUMBER; }
 {ID}   { strcpy(yylval.strval, yytext); return ID; }
 {DECIMAL} {yylval.fval = atof(yytext); return FLOAT; }
+{STRING} { strcpy(yylval.strval, yytext); return STRS; }
 
 
 ";"     { return EOL; }

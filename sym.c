@@ -37,17 +37,6 @@ void insert(char *id, int val)
 
     int index = hash(new_node->id); 
 
-    // replace previous value 
-    node *ptr = sym_table[index]; 
-    while (ptr != NULL)
-    {
-        if (strcasecmp(ptr->id, id) == 0)
-        {
-            ptr->value = new_node->value; 
-            return; 
-        }
-    }
-
     new_node->next = sym_table[index]; 
     sym_table[index] = new_node; 
 

@@ -1,0 +1,8 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/jaydenpersonnat/pond (programming language)'
+bison -d pond.y 
+flex pond.lex 
+cc -o pond pond.tab.c lex.yy.c ev.c sym.c
+ 
+make: Leaving directory `/Users/jaydenpersonnat/pond (programming language)'
+ 

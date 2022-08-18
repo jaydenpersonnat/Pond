@@ -1,8 +1,10 @@
 #define SIZE 1000
 
+
 typedef struct node
 {
     // possibly make union 
+
     int value; 
     char id[60]; 
     struct node* next; 

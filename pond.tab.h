@@ -49,13 +49,21 @@
      POW = 265,
      FACT = 266,
      EQUALS = 267,
-     PRINT = 268,
-     EOL = 269,
-     LPAR = 270,
-     RPAR = 271,
-     FLOAT = 272,
-     ID = 273,
-     ASSIGN = 274
+     LESS = 268,
+     GREATER = 269,
+     PRINT = 270,
+     EOL = 271,
+     LPAR = 272,
+     RPAR = 273,
+     FLOAT = 274,
+     ID = 275,
+     ASSIGN = 276,
+     WHILE = 277,
+     LBRACK = 278,
+     RBRACK = 279,
+     TRUE = 280,
+     FALSE = 281,
+     STRS = 282
    };
 #endif
 /* Tokens.  */
@@ -69,27 +77,36 @@
 #define POW 265
 #define FACT 266
 #define EQUALS 267
-#define PRINT 268
-#define EOL 269
-#define LPAR 270
-#define RPAR 271
-#define FLOAT 272
-#define ID 273
-#define ASSIGN 274
+#define LESS 268
+#define GREATER 269
+#define PRINT 270
+#define EOL 271
+#define LPAR 272
+#define RPAR 273
+#define FLOAT 274
+#define ID 275
+#define ASSIGN 276
+#define WHILE 277
+#define LBRACK 278
+#define RBRACK 279
+#define TRUE 280
+#define FALSE 281
+#define STRS 282
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 13 "pond.y"
+#line 15 "pond.y"
 {
     int intval; 
-    float fval; 
+    double fval; 
     char strval[60]; 
+    expr exp; 
 }
 /* Line 1529 of yacc.c.  */
-#line 93 "pond.tab.h"
+#line 110 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
