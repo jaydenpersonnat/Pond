@@ -1,4 +1,5 @@
 #include "ev.h"
+#include "sym.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,6 +7,8 @@
 #include <strings.h>
 #include <ctype.h> 
 #include <math.h>
+
+char *to_concrete(expr *expression);
 
 char buffer[INT_SIZE];
 
@@ -43,11 +46,19 @@ expr *create_varid_node(char *varidname)
 
 expr *create_assign_node(char *varidname, expr *exp)
 {
-    expr *assign_exp = malloc(sizeof(ASSIGN));
-    ASSIGN assign; assign.type = ASSIGNMENT, strcpy(assign.varidname, varidname); assign.exp = exp; 
+    expr *assign_exp = malloc(sizeof(ASSIGNM));
+    ASSIGNM assign; assign.type = ASSIGNMENT, strcpy(assign.varidname, varidname); assign.exp = exp; 
     assign_exp->assign = assign;
-
     return assign_exp; 
+}
+
+expr *create_if_node(expr *cond, expr *body)
+{
+    expr *if_exp = malloc(sizeof(IF_S));
+    IF_S conditional; 
+    conditional.type = CONDITIONAL; conditional.cond = cond; conditional.body = body;
+    if_exp->conditional = conditional;
+    return if_exp; 
 }
 
 expr *create_unop_node(enum uops op, expr *exp)
@@ -125,6 +136,10 @@ expr *eval(expr *expression)
     else if (expression->decimal.type == DECIMAL) return expression; 
     else if (expression->boolean.type == BOOL) return expression; 
     else if (expression->string.type == STR) return expression; 
+    else if (expression->varid.type == VAR)
+    {
+        return lookup(expression->varid.varidname); 
+    }
     else if (expression->unop.type == UNARYOP)
     {
         expression->unop.exp = eval(expression->unop.exp);
@@ -136,9 +151,22 @@ expr *eval(expr *expression)
         expression->binop.right  = eval(expression->binop.right);
         return binopeval(expression->binop);
     }
-
+    else if (expression->assign.type == ASSIGNMENT)
+    {
+        expression->assign.exp = eval(expression->assign.exp);
+        insert(expression->assign.varidname, expression->assign.exp); 
+        return expression; 
+    }
+    else if (expression->conditional.type == CONDITIONAL)
+    {
+        if (strcasecmp(to_concrete(eval(expression->conditional.cond)), "TRUE") == 0) 
+        {
+            return eval(expression->conditional.body);
+        }
+    }
 }
 
+// in else case to handle assignment and functions print nothing
 char *to_concrete(expr *expression)
 {
     if (expression->integer.type == NUM)
@@ -173,15 +201,20 @@ char *to_concrete(expr *expression)
         free(expression); 
         return buffer; 
     }
+    else
+    {
+        strcpy(buffer, "");
+        return buffer; 
+    }
    
 }
 
-// int main(void)
-// {
-//     expr *num1 = create_int_node(NUM, 10); 
-//     expr *num2 = create_int_node(NUM, 5); 
-//     expr *num3 = create_int_node(NUM, 5); 
-//     expr *ex = create_binop_node(PLUS, num1, create_binop_node(PLUS, num2, num3));
-//     printf("%s\n", to_concrete(eval(ex)));
+int main(void)
+{
+    expr *num1 = create_int_node(NUM, 10); 
+    expr *num2 = create_int_node(NUM, 5); 
+    expr *num3 = create_int_node(NUM, 5); 
+    // expr *ex = create_if_node(create_binop_node(GREATERTHAN, num1, num2), );
+    printf("%s\n", to_concrete(eval(ex)));
 
-// }
+}

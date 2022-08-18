@@ -33,6 +33,7 @@
 %token LBRACK RBRACK 
 %token TRUE FALSE
 %token STRS
+%token IF
 
 %type <exp> exp
 %type <intval> NUMBER 
@@ -80,12 +81,13 @@ exp:
   | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); }
   | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); }
   | exp LESS exp    {$$ = create_binop_node(LESSTHAN, $1, $3); }
+  | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4); }
   // ADD >= and <= later 
   | LPAR exp RPAR  {$$ = $2;}
   | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
-//  | ID             {$$ = lookup($1);}
-//  | ID ASSIGN exp EOL  { insert($1, $3); }
- | PRINT LPAR exp RPAR EOL {printf("> %s\n", to_concrete(eval($3)))}
+  | ID             {$$ = create_varid_node($1);}
+  | ID ASSIGN exp EOL  { eval(create_assign_node($1, $3));}
+  | PRINT LPAR exp RPAR EOL {printf("> %s\n", to_concrete(eval($3)))}
 //  | WHILE exp LBRACK exp RBRACK { while ($2) $4;}
  ;
 %%

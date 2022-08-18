@@ -24,7 +24,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 %%
 "+"    { return ADD; }
 "-"    { return SUB; }
-"x"    { return MUL; }
+"*"    { return MUL; }
 "/"    { return DIV; }
 "%"    { return MOD; }
 "|"    { return ABS; }
@@ -38,6 +38,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 ">"    { return GREATER; }
 "<"    { return LESS; }
 "="    { return ASSIGN; }
+"if"   { return IF; }
 "TRUE"  { return TRUE; }
 "FALSE"  { return FALSE; }
 

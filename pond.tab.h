@@ -63,7 +63,8 @@
      RBRACK = 279,
      TRUE = 280,
      FALSE = 281,
-     STRS = 282
+     STRS = 282,
+     IF = 283
    };
 #endif
 /* Tokens.  */
@@ -92,6 +93,7 @@
 #define TRUE 280
 #define FALSE 281
 #define STRS 282
+#define IF 283
 
 
 
@@ -106,7 +108,7 @@ typedef union YYSTYPE
     expr *exp; 
 }
 /* Line 1529 of yacc.c.  */
-#line 110 "pond.tab.h"
+#line 112 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

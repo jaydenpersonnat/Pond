@@ -1,5 +1,8 @@
 #include <stdbool.h> 
 
+#ifndef SYM_H
+#define SYM_H
+
 #define INT_SIZE 30
 #define MAX_FLOAT_SIZE 15
 #define MAX_STRING_SIZE 500
@@ -9,7 +12,8 @@
 struct expr; 
 struct UNOP; 
 struct BINOP;
-struct ASSIGN; 
+struct ASSIGNM; 
+struct IF_S; 
 
 enum uops{
     ABSV,
@@ -38,6 +42,7 @@ enum types{
     UNARYOP, 
     VAR, 
     ASSIGNMENT, 
+    CONDITIONAL, 
 };
 
 // Basic Data Types 
@@ -73,13 +78,13 @@ typedef struct VARID
 }
 VARID; 
 
-typedef struct ASSIGN
+typedef struct ASSIGNM
 {
     enum types type; 
     char varidname[MAX_STRING_SIZE];
     struct expr *exp; 
 }
-ASSIGN; 
+ASSIGNM; 
 
 typedef struct UNOP
 {
@@ -98,6 +103,13 @@ typedef struct BINOP
 }
 BINOP;
 
+typedef struct IF_S
+{
+    enum types type; 
+    struct expr *cond; 
+    struct expr *body; 
+}
+IF_S; 
 
 typedef struct expr
 {
@@ -107,13 +119,13 @@ typedef struct expr
         BOOLEAN boolean; 
         STRING string; 
         VARID varid; 
-        ASSIGN assign; 
+        ASSIGNM assign; 
+        IF_S conditional; 
         UNOP unop; 
         BINOP binop; 
     };
 }
 expr; 
-
 
 
 
@@ -124,7 +136,12 @@ expr *create_str_node(enum types type, char *val);
 expr *create_varid_node(char *varidname);
 expr *create_binop_node(enum bops op, expr *left, expr *right);
 expr *create_unop_node(enum uops op, expr *exp); 
+expr *create_if_node(expr *cond, expr *body);
+
 
 expr *eval(expr *expression); 
 char *to_concrete(expr *expression);
 expr *create_assign_node(char *varidname, expr *exp); 
+
+
+#endif
