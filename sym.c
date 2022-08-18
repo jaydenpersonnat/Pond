@@ -17,19 +17,19 @@ long hash(char *id)
         hash = ((hash << 5) + hash) + c; 
     }
 
-    return hash % SIZE; 
+    return hash % TABLE_SIZE; 
 }
 
 
 void init_hash_table()
 {
-    for (int i = 0; i < SIZE; i++)
+    for (int i = 0; i < TABLE_SIZE; i++)
     {
         sym_table[i] = NULL; 
     }
 }
 
-void insert(char *id, int val)
+void insert(char *id, expr *val)
 {
     node *new_node = (node *) malloc(sizeof(node)); 
     strcpy(new_node->id, id); 
@@ -43,7 +43,7 @@ void insert(char *id, int val)
     return; 
 }
 
-int lookup(char *id)
+expr *lookup(char *id)
 {
     int index = hash(id); 
     node *cursor = sym_table[index]; 
@@ -57,6 +57,6 @@ int lookup(char *id)
         cursor = cursor->next; 
     }
 
-    // change later so returns error
-    return -1; 
+    // change later so returns error - create type NONE or NOT FOUND
+    return create_int_node(NUM, -1); 
 }

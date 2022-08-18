@@ -1,23 +1,22 @@
-#define SIZE 1000
-
+#include "ev.h"
 
 typedef struct node
 {
     // possibly make union 
 
-    int value; 
-    char id[60]; 
+    struct expr *value; 
+    char id[MAX_STRING_SIZE]; 
     struct node* next; 
 }
 node;
 
-node *sym_table[SIZE];
+node *sym_table[TABLE_SIZE];
 
 // Hash function 
 long hash(char *id); 
 
 void init_hash_table(); 
 
-void insert(char *id, int val); 
+void insert(char *id, expr *val);
 
-int lookup(char *id);
+expr *lookup(char *id);

@@ -73,16 +73,16 @@ exp:
   | exp MUL exp    {$$ = create_binop_node(TIMES, $1, $3); }
   | exp DIV exp    {$$ = create_binop_node(DIVIDE, $1, $3); }
   | exp MOD exp    {$$ = create_binop_node(MODULO, $1, $3);}
-//  | ABS exp ABS       {$$ = $2 >= 0? $2: - $2; }
+ | ABS exp ABS       {$$ = create_unop_node(ABSV, $2); }
   | exp POW exp    {$$ = create_binop_node(POWER, $1, $3);}
-//   | exp FACT       {$$ = create_binop_node(FACTORIAL, $1, $3); }
+  | exp FACT       {$$ = create_unop_node(FACTORIAL, $1); }
   | exp EQUALS exp {$$ = create_binop_node(EQUALTO, $1, $3); }
   | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); }
   | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); }
   | exp LESS exp    {$$ = create_binop_node(LESSTHAN, $1, $3); }
   // ADD >= and <= later 
   | LPAR exp RPAR  {$$ = $2;}
-//  | SUB exp        {$$ = -$2}
+  | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
 //  | ID             {$$ = lookup($1);}
 //  | ID ASSIGN exp EOL  { insert($1, $3); }
  | PRINT LPAR exp RPAR EOL {printf("> %s\n", to_concrete(eval($3)))}

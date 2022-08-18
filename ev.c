@@ -29,9 +29,36 @@ expr *create_bool_node(enum types type, bool val)
 }
 expr *create_str_node(enum types type, char *val)
 {
-    expr *str_exp = malloc(sizeof(BOOLEAN)); 
+    expr *str_exp = malloc(sizeof(STRING)); 
     STRING string; string.type = STR; strcpy(string.value, val); str_exp->string = string; 
     return str_exp; 
+}
+
+expr *create_varid_node(char *varidname)
+{
+    expr *var_exp = malloc(sizeof(VARID));
+    VARID varid; varid.type = VAR; strcpy(varid.varidname, varidname); var_exp->varid = varid;
+    return var_exp; 
+}
+
+expr *create_assign_node(char *varidname, expr *exp)
+{
+    expr *assign_exp = malloc(sizeof(ASSIGN));
+    ASSIGN assign; assign.type = ASSIGNMENT, strcpy(assign.varidname, varidname); assign.exp = exp; 
+    assign_exp->assign = assign;
+
+    return assign_exp; 
+}
+
+expr *create_unop_node(enum uops op, expr *exp)
+{
+    expr *unop_expr = malloc(sizeof(UNOP));
+    UNOP unop; 
+    unop.type = UNARYOP; 
+    unop.op = op; 
+    unop.exp = exp; 
+    unop_expr->unop = unop; 
+    return unop_expr; 
 }
 
 expr *create_binop_node(enum bops op, expr *left, expr *right)
@@ -46,6 +73,23 @@ expr *create_binop_node(enum bops op, expr *left, expr *right)
     return binop_expr; 
 }
 
+expr *unopeval(UNOP u_exp)
+{
+    switch(u_exp.op)
+    {
+        case ABSV :
+        {
+            int value = u_exp.exp->integer.value; 
+            return create_int_node(NUM, value >= 0? value: -1 * value);
+        }
+        case NEGATIVE:
+        {
+            return create_int_node(NUM, -1 * u_exp.exp->integer.value);
+        }
+        case FACTORIAL: 
+            return create_int_node(NUM, tgamma(u_exp.exp->integer.value + 1));
+    }
+}
 expr *binopeval(BINOP b_exp)
 {
     // add in error checking later - wildcard match
@@ -81,12 +125,18 @@ expr *eval(expr *expression)
     else if (expression->decimal.type == DECIMAL) return expression; 
     else if (expression->boolean.type == BOOL) return expression; 
     else if (expression->string.type == STR) return expression; 
+    else if (expression->unop.type == UNARYOP)
+    {
+        expression->unop.exp = eval(expression->unop.exp);
+        return unopeval(expression->unop); 
+    }
     else if (expression->binop.type == BINARYOP)
     {
         expression->binop.left = eval(expression->binop.left);
         expression->binop.right  = eval(expression->binop.right);
         return binopeval(expression->binop);
     }
+
 }
 
 char *to_concrete(expr *expression)

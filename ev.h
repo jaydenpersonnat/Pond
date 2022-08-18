@@ -3,15 +3,18 @@
 #define INT_SIZE 30
 #define MAX_FLOAT_SIZE 15
 #define MAX_STRING_SIZE 500
+#define TABLE_SIZE 1000
+
 
 struct expr; 
+struct UNOP; 
 struct BINOP;
+struct ASSIGN; 
 
 enum uops{
     ABSV,
     FACTORIAL,
     NEGATIVE, 
-
 };
 
 enum bops{
@@ -32,6 +35,9 @@ enum types{
     BOOL, 
     STR,
     BINARYOP, 
+    UNARYOP, 
+    VAR, 
+    ASSIGNMENT, 
 };
 
 // Basic Data Types 
@@ -60,6 +66,29 @@ typedef struct STRING
 }
 STRING;
 
+typedef struct VARID
+{
+    enum types type; 
+    char varidname[MAX_STRING_SIZE];
+}
+VARID; 
+
+typedef struct ASSIGN
+{
+    enum types type; 
+    char varidname[MAX_STRING_SIZE];
+    struct expr *exp; 
+}
+ASSIGN; 
+
+typedef struct UNOP
+{
+    enum types type; 
+    enum uops op; 
+    struct expr *exp; 
+}
+UNOP; 
+
 typedef struct BINOP
 {
     enum types type; 
@@ -77,6 +106,9 @@ typedef struct expr
         DEC decimal; 
         BOOLEAN boolean; 
         STRING string; 
+        VARID varid; 
+        ASSIGN assign; 
+        UNOP unop; 
         BINOP binop; 
     };
 }
@@ -89,7 +121,10 @@ expr *create_int_node(enum types type, int val);
 expr *create_dec_node(enum types type, float val); 
 expr *create_bool_node(enum types type, bool val); 
 expr *create_str_node(enum types type, char *val); 
+expr *create_varid_node(char *varidname);
 expr *create_binop_node(enum bops op, expr *left, expr *right);
+expr *create_unop_node(enum uops op, expr *exp); 
 
 expr *eval(expr *expression); 
 char *to_concrete(expr *expression);
+expr *create_assign_node(char *varidname, expr *exp); 
