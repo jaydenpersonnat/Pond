@@ -52,14 +52,35 @@ expr *create_assign_node(char *varidname, expr *exp)
     return assign_exp; 
 }
 
-expr *create_if_node(expr *cond, expr *body)
+expr *create_print_node(expr *exp)
 {
-    expr *if_exp = malloc(sizeof(IF_S));
-    IF_S conditional; 
-    conditional.type = CONDITIONAL; conditional.cond = cond; conditional.body = body;
-    if_exp->conditional = conditional;
-    return if_exp; 
+    expr *print_exp = malloc(sizeof(PRINTI)); 
+    PRINTI print; 
+    print.type = PRINTING;
+    print.exp = exp;
+    print_exp->print = print;
+    return print_exp; 
 }
+
+expr *create_doloop_node(int iterations, expr *exp)
+{
+    expr *doloop_exp = malloc(sizeof(DOLOOP)); 
+    DOLOOP doloop; 
+    doloop.type = DOL; 
+    doloop.exp = exp; 
+    doloop.iterations = iterations; 
+    doloop_exp->doloop = doloop; 
+    return doloop_exp; 
+}
+
+// expr *create_if_node(expr *cond, expr *body)
+// {
+//     expr *if_exp = malloc(sizeof(IF_S));
+//     IF_S conditional; 
+//     conditional.type = CONDITIONAL; conditional.cond = cond; conditional.body = body;
+//     if_exp->conditional = conditional;
+//     return if_exp; 
+// }
 
 expr *create_unop_node(enum uops op, expr *exp)
 {
@@ -157,13 +178,44 @@ expr *eval(expr *expression)
         insert(expression->assign.varidname, expression->assign.exp); 
         return expression; 
     }
-    else if (expression->conditional.type == CONDITIONAL)
+    else if (expression->print.type == PRINTING)
     {
-        if (strcasecmp(to_concrete(eval(expression->conditional.cond)), "TRUE") == 0) 
-        {
-            return eval(expression->conditional.body);
-        }
+        // expression->print.exp = eval(expression->print.exp);
+        printf("> %s\n", to_concrete(eval(expression->print.exp)));
+        return expression; 
     }
+    else if (expression->doloop.type == DOL)
+    {
+        for (int i = 0; i < expression->doloop.iterations; i++)
+        {
+            expr *exp = expression->doloop.exp;
+            // expr *exp = expression->doloop.exp;
+            eval(exp);
+            // printf("> %s\n", to_concrete(eval(exp))); 
+            // expr *exp = eval(expression->doloop.exp); 
+            // free(exp); 
+            // print(5);
+            // PRINT(NUM(5))) -> NUM 5
+            
+        }
+        return expression; 
+    }
+    else
+    {
+        return expression;
+    }
+    // fix if statements
+    // else if (expression->conditional.type == CONDITIONAL)
+    // {
+    //     if (strcasecmp(to_concrete(eval(expression->conditional.cond)), "TRUE") == 0) 
+    //     {
+    //         return eval(expression->conditional.body);
+    //     }
+    //     else
+    //     {
+    //         return expression;
+    //     }
+    // }
 }
 
 // in else case to handle assignment and functions print nothing
@@ -172,13 +224,13 @@ char *to_concrete(expr *expression)
     if (expression->integer.type == NUM)
     {
         sprintf(buffer, "%d", expression->integer.value);
-        free(expression); 
+        // free(expression); 
         return buffer;
     }
     else if (expression->decimal.type == DECIMAL)
     {
         gcvt(expression->decimal.value, MAX_FLOAT_SIZE, buffer);
-        free(expression);
+        // free(expression);
         return buffer; 
     }
     else if (expression->boolean.type == BOOL)
@@ -186,19 +238,19 @@ char *to_concrete(expr *expression)
         if (expression->boolean.value)
         {
             strcpy(buffer, "TRUE"); 
-            free(expression);
+            // free(expression);
             return buffer; 
         }
         strcpy(buffer, "FALSE"); 
 
-        free(expression); 
+        // free(expression); 
         return buffer;
     }
     else if (expression->string.type == STR)
     {
         strcpy(buffer, expression->string.value);
 
-        free(expression); 
+        // free(expression); 
         return buffer; 
     }
     else
@@ -209,12 +261,3 @@ char *to_concrete(expr *expression)
    
 }
 
-int main(void)
-{
-    expr *num1 = create_int_node(NUM, 10); 
-    expr *num2 = create_int_node(NUM, 5); 
-    expr *num3 = create_int_node(NUM, 5); 
-    // expr *ex = create_if_node(create_binop_node(GREATERTHAN, num1, num2), );
-    printf("%s\n", to_concrete(eval(ex)));
-
-}

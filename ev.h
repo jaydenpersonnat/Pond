@@ -14,6 +14,7 @@ struct UNOP;
 struct BINOP;
 struct ASSIGNM; 
 struct IF_S; 
+struct PRINTI; 
 
 enum uops{
     ABSV,
@@ -43,6 +44,8 @@ enum types{
     VAR, 
     ASSIGNMENT, 
     CONDITIONAL, 
+    PRINTING, 
+    DOL, 
 };
 
 // Basic Data Types 
@@ -111,6 +114,21 @@ typedef struct IF_S
 }
 IF_S; 
 
+typedef struct DOLOOP
+{
+    enum types type; 
+    int iterations; 
+    struct expr *exp;
+}
+DOLOOP; 
+
+typedef struct PRINTI
+{
+    enum types type; 
+    struct expr *exp; 
+}
+PRINTI; 
+
 typedef struct expr
 {
     union {
@@ -123,6 +141,8 @@ typedef struct expr
         IF_S conditional; 
         UNOP unop; 
         BINOP binop; 
+        PRINTI print; 
+        DOLOOP doloop; 
     };
 }
 expr; 
@@ -136,7 +156,9 @@ expr *create_str_node(enum types type, char *val);
 expr *create_varid_node(char *varidname);
 expr *create_binop_node(enum bops op, expr *left, expr *right);
 expr *create_unop_node(enum uops op, expr *exp); 
-expr *create_if_node(expr *cond, expr *body);
+// expr *create_if_node(expr *cond, expr *body);
+expr *create_print_node(expr *exp);
+expr *create_doloop_node(int iterations, expr *exp);
 
 
 expr *eval(expr *expression); 

@@ -39,6 +39,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "<"    { return LESS; }
 "="    { return ASSIGN; }
 "if"   { return IF; }
+"do"   { return DO; }
 "TRUE"  { return TRUE; }
 "FALSE"  { return FALSE; }
 

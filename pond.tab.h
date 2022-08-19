@@ -64,7 +64,8 @@
      TRUE = 280,
      FALSE = 281,
      STRS = 282,
-     IF = 283
+     IF = 283,
+     DO = 284
    };
 #endif
 /* Tokens.  */
@@ -94,6 +95,7 @@
 #define FALSE 281
 #define STRS 282
 #define IF 283
+#define DO 284
 
 
 
@@ -108,7 +110,7 @@ typedef union YYSTYPE
     expr *exp; 
 }
 /* Line 1529 of yacc.c.  */
-#line 112 "pond.tab.h"
+#line 114 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

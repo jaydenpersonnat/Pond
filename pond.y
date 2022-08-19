@@ -34,6 +34,7 @@
 %token TRUE FALSE
 %token STRS
 %token IF
+%token DO 
 
 %type <exp> exp
 %type <intval> NUMBER 
@@ -47,7 +48,7 @@
 
 %%
 program: 
- | program exp
+ | program exp     { eval($2);}
 //  | program whileLOOP
 ;
 
@@ -74,21 +75,21 @@ exp:
   | exp MUL exp    {$$ = create_binop_node(TIMES, $1, $3); }
   | exp DIV exp    {$$ = create_binop_node(DIVIDE, $1, $3); }
   | exp MOD exp    {$$ = create_binop_node(MODULO, $1, $3);}
- | ABS exp ABS       {$$ = create_unop_node(ABSV, $2); }
+  | ABS exp ABS       {$$ = create_unop_node(ABSV, $2); }
   | exp POW exp    {$$ = create_binop_node(POWER, $1, $3);}
   | exp FACT       {$$ = create_unop_node(FACTORIAL, $1); }
   | exp EQUALS exp {$$ = create_binop_node(EQUALTO, $1, $3); }
   | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); }
   | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); }
   | exp LESS exp    {$$ = create_binop_node(LESSTHAN, $1, $3); }
-  | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4); }
+//   | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4); }
   // ADD >= and <= later 
   | LPAR exp RPAR  {$$ = $2;}
   | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
   | ID             {$$ = create_varid_node($1);}
-  | ID ASSIGN exp EOL  { eval(create_assign_node($1, $3));}
-  | PRINT LPAR exp RPAR EOL {printf("> %s\n", to_concrete(eval($3)))}
-//  | WHILE exp LBRACK exp RBRACK { while ($2) $4;}
+  | ID ASSIGN exp EOL  { $$ = create_assign_node($1, $3);}
+  | PRINT LPAR exp RPAR EOL { $$ = create_print_node($3); }
+  | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}    
  ;
 %%
 
