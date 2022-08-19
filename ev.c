@@ -174,8 +174,8 @@ expr *eval(expr *expression)
     }
     else if (expression->assign.type == ASSIGNMENT)
     {
-        expression->assign.exp = eval(expression->assign.exp);
-        insert(expression->assign.varidname, expression->assign.exp); 
+        // expression->assign.exp = eval(expression->assign.exp);
+        insert(expression->assign.varidname, eval(expression->assign.exp)); 
         return expression; 
     }
     else if (expression->print.type == PRINTING)
@@ -188,9 +188,8 @@ expr *eval(expr *expression)
     {
         for (int i = 0; i < expression->doloop.iterations; i++)
         {
-            expr *exp = expression->doloop.exp;
             // expr *exp = expression->doloop.exp;
-            eval(exp);
+            eval(expression->doloop.exp);
             // printf("> %s\n", to_concrete(eval(exp))); 
             // expr *exp = eval(expression->doloop.exp); 
             // free(exp); 

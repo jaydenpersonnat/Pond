@@ -49,6 +49,7 @@
 %%
 program: 
  | program exp     { eval($2);}
+ | program DO NUMBER LBRACK exp RBRACK { for (int i = 0; i < $3; i++)  eval($5);}
 //  | program whileLOOP
 ;
 
@@ -89,10 +90,10 @@ exp:
   | ID             {$$ = create_varid_node($1);}
   | ID ASSIGN exp EOL  { $$ = create_assign_node($1, $3);}
   | PRINT LPAR exp RPAR EOL { $$ = create_print_node($3); }
-  | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}    
+//   | DO NUMBER LBRACK exp RBRACK       
  ;
 %%
-
+ 
 
 int main(int argc, char **argv)
 {

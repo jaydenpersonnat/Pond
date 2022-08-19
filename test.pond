@@ -1,5 +1,10 @@
+x = 6;
+y = 3; 
 
-do 7
+do 5
 {
-    print(5);
+    x = x + 2;
 }
+
+
+print(x);
