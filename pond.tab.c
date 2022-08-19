@@ -491,8 +491,8 @@ static const yytype_uint8 yyrline[] =
 {
        0,    54,    54,    55,    56,    57,    64,    71,    82,    83,
       84,    85,    86,    87,    88,    89,    90,    91,    92,    93,
-      94,    95,    96,    97,    98,    99,   102,   103,   104,   105,
-     106
+      94,    95,    96,    97,    98,    99,   100,   101,   102,   103,
+     104
 };
 #endif
 
@@ -1601,27 +1601,27 @@ yyreduce:
     break;
 
   case 26:
-#line 102 "pond.y"
+#line 100 "pond.y"
     {(yyval.exp) = (yyvsp[(2) - (3)].exp);;}
     break;
 
   case 27:
-#line 103 "pond.y"
+#line 101 "pond.y"
     {(yyval.exp) = create_unop_node(NEGATIVE, (yyvsp[(2) - (2)].exp)); ;}
     break;
 
   case 28:
-#line 104 "pond.y"
+#line 102 "pond.y"
     {(yyval.exp) = create_varid_node((yyvsp[(1) - (1)].strval));;}
     break;
 
   case 29:
-#line 105 "pond.y"
+#line 103 "pond.y"
     { (yyval.exp) = create_assign_node((yyvsp[(1) - (4)].strval), (yyvsp[(3) - (4)].exp));;}
     break;
 
   case 30:
-#line 106 "pond.y"
+#line 104 "pond.y"
     { (yyval.exp) = create_print_node((yyvsp[(3) - (5)].exp)); ;}
     break;
 
@@ -1841,7 +1841,7 @@ yyreturn:
 }
 
 
-#line 108 "pond.y"
+#line 106 "pond.y"
 
  
 

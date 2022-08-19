@@ -130,7 +130,15 @@ expr *binopeval(BINOP b_exp)
         // Add associative for all operators 
         case PLUS :
         {
-            return create_int_node(NUM, b_exp.left->integer.value + b_exp.right->integer.value);
+            if (b_exp.left->integer.type == NUM && b_exp.right->integer.type == NUM) 
+                return create_int_node(NUM, b_exp.left->integer.value + b_exp.right->integer.value);
+            if (b_exp.left->integer.type == NUM && b_exp.right->decimal.type == DECIMAL) 
+                return create_dec_node(DECIMAL, b_exp.left->integer.value + b_exp.right->decimal.value);
+            if (b_exp.left->decimal.type == DECIMAL && b_exp.right->integer.type == NUM) 
+                return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->integer.value);
+            if (b_exp.left->decimal.type == DECIMAL && b_exp.right->decimal.type == DECIMAL) 
+                return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->decimal.value);;
+;
         }
         case MINUS : 
             return create_int_node(NUM, b_exp.left->integer.value - b_exp.right->integer.value);

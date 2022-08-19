@@ -97,13 +97,11 @@ exp:
   | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); }
   | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); }
   | exp LESS exp    {$$ = create_binop_node(LESSTHAN, $1, $3); }
-//   | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4); }
-  // ADD >= and <= later 
   | LPAR exp RPAR  {$$ = $2;}
   | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
   | ID             {$$ = create_varid_node($1);}
   | ID ASSIGN exp EOL  { $$ = create_assign_node($1, $3);}
-  | PRINT LPAR exp RPAR EOL { $$ = create_print_node($3); }
+  | PRINT LPAR exp RPAR EOL { $$ = create_print_node($3); }  
  ;
 %%
  
