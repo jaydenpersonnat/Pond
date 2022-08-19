@@ -40,6 +40,9 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "="    { return ASSIGN; }
 "if"   { return IF; }
 "do"   { return DO; }
+"for"  { return FOR; }
+"to"   { return TO; }
+"incr" { return INCR; }
 "TRUE"  { return TRUE; }
 "FALSE"  { return FALSE; }
 

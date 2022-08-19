@@ -129,7 +129,9 @@ expr *binopeval(BINOP b_exp)
     {
         // Add associative for all operators 
         case PLUS :
+        {
             return create_int_node(NUM, b_exp.left->integer.value + b_exp.right->integer.value);
+        }
         case MINUS : 
             return create_int_node(NUM, b_exp.left->integer.value - b_exp.right->integer.value);
         case TIMES : 

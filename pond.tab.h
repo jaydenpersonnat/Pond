@@ -65,7 +65,10 @@
      FALSE = 281,
      STRS = 282,
      IF = 283,
-     DO = 284
+     DO = 284,
+     FOR = 285,
+     INCR = 286,
+     TO = 287
    };
 #endif
 /* Tokens.  */
@@ -96,13 +99,16 @@
 #define STRS 282
 #define IF 283
 #define DO 284
+#define FOR 285
+#define INCR 286
+#define TO 287
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 15 "pond.y"
+#line 16 "pond.y"
 {
     int intval; 
     double fval; 
@@ -110,7 +116,7 @@ typedef union YYSTYPE
     expr *exp; 
 }
 /* Line 1529 of yacc.c.  */
-#line 114 "pond.tab.h"
+#line 120 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

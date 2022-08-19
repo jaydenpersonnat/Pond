@@ -1,10 +1,7 @@
 x = 6;
-y = 3; 
 
-do 5
+if x > 5
 {
-    x = x + 2;
+    print(x + 9);
 }
 
-
-print(x);

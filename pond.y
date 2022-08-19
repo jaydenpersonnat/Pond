@@ -6,6 +6,7 @@
     #include <stdio.h>
     #include <math.h> 
     #include <stdbool.h> 
+    #include <string.h>
 
     int yylex();
     int yyerror(char *s);
@@ -35,6 +36,9 @@
 %token STRS
 %token IF
 %token DO 
+%token FOR 
+%token INCR
+%token TO 
 
 %type <exp> exp
 %type <intval> NUMBER 
@@ -50,20 +54,30 @@
 program: 
  | program exp     { eval($2);}
  | program DO NUMBER LBRACK exp RBRACK { for (int i = 0; i < $3; i++)  eval($5);}
-//  | program whileLOOP
+ | program FOR ID ASSIGN NUMBER TO ID ASSIGN NUMBER INCR NUMBER LBRACK exp RBRACK
+                {
+                    for (int i = $5; i <= $9; i = i + $11)
+                    {
+                        eval($13);
+                    }
+                }
+ | program WHILE exp LBRACK exp RBRACK 
+                {
+                    while (strcmp(to_concrete(eval($3)), "TRUE") == 0)
+                    {
+                        eval($5);
+                    }
+                }
+ | program IF exp LBRACK exp RBRACK 
+                {
+                    if (strcmp(to_concrete(eval($3)), "TRUE") == 0)
+                    {
+                        eval($5);
+                    }
+                }
 ;
 
-// line: 
-//     print
-//     assign
 
-// print: PRINT LPAR exp RPAR EOL {printf("> %d\n", $3);}
-// whileLOOP: WHILE exp LBRACK exp RBRACK {
-//      while ($2)
-//      {
-//         printf("%d", $4); 
-//      }
-// }
 
 exp: 
   | NUMBER        { $$ = create_int_node(NUM, $1); }
@@ -90,7 +104,6 @@ exp:
   | ID             {$$ = create_varid_node($1);}
   | ID ASSIGN exp EOL  { $$ = create_assign_node($1, $3);}
   | PRINT LPAR exp RPAR EOL { $$ = create_print_node($3); }
-//   | DO NUMBER LBRACK exp RBRACK       
  ;
 %%
  
