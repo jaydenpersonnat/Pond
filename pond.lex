@@ -37,12 +37,16 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "=="   { return EQUALS; }
 ">"    { return GREATER; }
 "<"    { return LESS; }
+">="   { return GREATEREQUAL; }
+"<="   { return LESSEQUAL; }
 "="    { return ASSIGN; }
+"!="   { return NOTEQUAL; }
 "if"   { return IF; }
 "do"   { return DO; }
 "for"  { return FOR; }
 "to"   { return TO; }
 "incr" { return INCR; }
+"not"  { return NOT; }
 "TRUE"  { return TRUE; }
 "FALSE"  { return FALSE; }
 

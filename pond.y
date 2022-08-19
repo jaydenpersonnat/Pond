@@ -22,7 +22,7 @@
 
 %token NUMBER 
 %token ADD SUB MUL DIV ABS MOD POW FACT
-%token EQUALS
+%token EQUALS NOTEQUAL 
 %token LESS GREATER 
 %token PRINT 
 %token EOL 
@@ -39,14 +39,17 @@
 %token FOR 
 %token INCR
 %token TO 
+%token NOT 
+%token LESSEQUAL GREATEREQUAL 
 
 %type <exp> exp
 %type <intval> NUMBER 
 %type <strval> ID STRS
 %type <fval> FLOAT 
 
+%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL 
 %left ADD SUB
-%left MUL DIV
+%left MUL DIV MOD
 %right POW
 
 
@@ -94,15 +97,20 @@ exp:
   | exp POW exp    {$$ = create_binop_node(POWER, $1, $3);}
   | exp FACT       {$$ = create_unop_node(FACTORIAL, $1); }
   | exp EQUALS exp {$$ = create_binop_node(EQUALTO, $1, $3); }
-  | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); }
-  | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); }
+  | exp NOTEQUAL exp {$$ = create_binop_node(NOTEQUALTO, $1, $3); }
+  | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); } 
+  | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); } 
   | exp LESS exp    {$$ = create_binop_node(LESSTHAN, $1, $3); }
+  | exp GREATEREQUAL exp {$$ = create_binop_node(GREATERTHANEQUAL, $1, $3);}
+  | exp LESSEQUAL exp {$$ = create_binop_node(LESSTHANEQUAL, $1, $3); }
+  | exp LESS
+  | NOT exp         {$$ = create_unop_node(NOTOP, $2); }
   | LPAR exp RPAR  {$$ = $2;}
   | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
   | ID             {$$ = create_varid_node($1);}
   | ID ASSIGN exp EOL  { $$ = create_assign_node($1, $3);}
   | PRINT LPAR exp RPAR EOL { $$ = create_print_node($3); }  
- ;
+ ; 
 %%
  
 

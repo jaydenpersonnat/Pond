@@ -4,7 +4,7 @@
 #define SYM_H
 
 #define INT_SIZE 30
-#define MAX_FLOAT_SIZE 15
+#define MAX_FLOAT_SIZE 6
 #define MAX_STRING_SIZE 500
 #define TABLE_SIZE 1000
 
@@ -15,11 +15,14 @@ struct BINOP;
 struct ASSIGNM; 
 struct IF_S; 
 struct PRINTI; 
+// struct exprlist;
+// struct last_el; 
 
 enum uops{
     ABSV,
     FACTORIAL,
     NEGATIVE, 
+    NOTOP, 
 };
 
 enum bops{
@@ -30,8 +33,11 @@ enum bops{
     MODULO, 
     POWER, 
     EQUALTO, 
+    NOTEQUALTO, 
     LESSTHAN,
     GREATERTHAN,
+    LESSTHANEQUAL,
+    GREATERTHANEQUAL, 
 };
 
 enum types{
@@ -128,6 +134,21 @@ typedef struct PRINTI
     struct expr *exp; 
 }
 PRINTI; 
+
+
+// typedef struct 
+// {
+//     struct exprlist *last; 
+// }
+// last_el;
+
+// linked list of expressions 
+// typedef struct exprlist
+// {
+//     struct expr node; 
+//     struct exprlist *next;  
+// }
+// exprlist; 
 
 typedef struct expr
 {

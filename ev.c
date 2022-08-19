@@ -120,6 +120,8 @@ expr *unopeval(UNOP u_exp)
         }
         case FACTORIAL: 
             return create_int_node(NUM, tgamma(u_exp.exp->integer.value + 1));
+        case NOTOP: 
+            return create_bool_node(BOOL, !u_exp.exp->boolean.value); 
     }
 }
 expr *binopeval(BINOP b_exp)
@@ -132,33 +134,57 @@ expr *binopeval(BINOP b_exp)
         {
             if (b_exp.left->integer.type == NUM && b_exp.right->integer.type == NUM) 
                 return create_int_node(NUM, b_exp.left->integer.value + b_exp.right->integer.value);
-            if (b_exp.left->integer.type == NUM && b_exp.right->decimal.type == DECIMAL) 
+            else if (b_exp.left->integer.type == NUM && b_exp.right->decimal.type == DECIMAL) 
                 return create_dec_node(DECIMAL, b_exp.left->integer.value + b_exp.right->decimal.value);
-            if (b_exp.left->decimal.type == DECIMAL && b_exp.right->integer.type == NUM) 
+            else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->integer.type == NUM) 
                 return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->integer.value);
-            if (b_exp.left->decimal.type == DECIMAL && b_exp.right->decimal.type == DECIMAL) 
-                return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->decimal.value);;
-;
+            else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->decimal.type == DECIMAL) 
+                return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->decimal.value);
+            // add error message here 
         }
         case MINUS : 
-            return create_int_node(NUM, b_exp.left->integer.value - b_exp.right->integer.value);
+        {
+            if (b_exp.left->integer.type == NUM && b_exp.right->integer.type == NUM) 
+                return create_int_node(NUM, b_exp.left->integer.value - b_exp.right->integer.value);
+            else if (b_exp.left->integer.type == NUM && b_exp.right->decimal.type == DECIMAL) 
+                return create_dec_node(DECIMAL, b_exp.left->integer.value - b_exp.right->decimal.value);
+            else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->integer.type == NUM) 
+                return create_dec_node(DECIMAL, b_exp.left->decimal.value - b_exp.right->integer.value);
+            else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->decimal.type == DECIMAL) 
+                return create_dec_node(DECIMAL, b_exp.left->decimal.value - b_exp.right->decimal.value);
+        }
         case TIMES : 
-            return create_int_node(NUM, b_exp.left->integer.value * b_exp.right->integer.value);
+            if (b_exp.left->integer.type == NUM && b_exp.right->integer.type == NUM) 
+                return create_int_node(NUM, b_exp.left->integer.value * b_exp.right->integer.value);
+            else if (b_exp.left->integer.type == NUM && b_exp.right->decimal.type == DECIMAL) 
+                return create_dec_node(DECIMAL, b_exp.left->integer.value * b_exp.right->decimal.value);
+            else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->integer.type == NUM) 
+                return create_dec_node(DECIMAL, b_exp.left->decimal.value * b_exp.right->integer.value);
+            else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->decimal.type == DECIMAL) 
+                return create_dec_node(DECIMAL, b_exp.left->decimal.value * b_exp.right->decimal.value);
         case DIVIDE : 
+            {
             // Handle divide by zero error
             return create_int_node(NUM, b_exp.left->integer.value / b_exp.right->integer.value); 
+            }
         case MODULO :
             return create_int_node(NUM, b_exp.left->integer.value % b_exp.right->integer.value); 
         case POWER : 
             return create_int_node(NUM, pow(b_exp.left->integer.value, b_exp.right->integer.value));
         case EQUALTO : 
             return create_bool_node(BOOL, b_exp.left->integer.value == b_exp.right->integer.value? true: false);
+        case NOTEQUALTO : 
+            return create_bool_node(BOOL, b_exp.left->integer.value != b_exp.right->integer.value? true: false); 
         case GREATERTHAN:
             return create_bool_node(BOOL, b_exp.left->integer.value > b_exp.right->integer.value? true: false);
         case LESSTHAN:
             return create_bool_node(BOOL, b_exp.left->integer.value < b_exp.right->integer.value? true: false);
+        case GREATERTHANEQUAL: 
+            return create_bool_node(BOOL, b_exp.left->integer.value >= b_exp.right->integer.value? true: false);
+        case LESSTHANEQUAL: 
+            return create_bool_node(BOOL, b_exp.left->integer.value <= b_exp.right->integer.value? true: false);
     }
-  
+
 }
 
 expr *eval(expr *expression)

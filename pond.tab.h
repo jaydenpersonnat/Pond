@@ -49,26 +49,30 @@
      POW = 265,
      FACT = 266,
      EQUALS = 267,
-     LESS = 268,
-     GREATER = 269,
-     PRINT = 270,
-     EOL = 271,
-     LPAR = 272,
-     RPAR = 273,
-     FLOAT = 274,
-     ID = 275,
-     ASSIGN = 276,
-     WHILE = 277,
-     LBRACK = 278,
-     RBRACK = 279,
-     TRUE = 280,
-     FALSE = 281,
-     STRS = 282,
-     IF = 283,
-     DO = 284,
-     FOR = 285,
-     INCR = 286,
-     TO = 287
+     NOTEQUAL = 268,
+     LESS = 269,
+     GREATER = 270,
+     PRINT = 271,
+     EOL = 272,
+     LPAR = 273,
+     RPAR = 274,
+     FLOAT = 275,
+     ID = 276,
+     ASSIGN = 277,
+     WHILE = 278,
+     LBRACK = 279,
+     RBRACK = 280,
+     TRUE = 281,
+     FALSE = 282,
+     STRS = 283,
+     IF = 284,
+     DO = 285,
+     FOR = 286,
+     INCR = 287,
+     TO = 288,
+     NOT = 289,
+     LESSEQUAL = 290,
+     GREATEREQUAL = 291
    };
 #endif
 /* Tokens.  */
@@ -82,26 +86,30 @@
 #define POW 265
 #define FACT 266
 #define EQUALS 267
-#define LESS 268
-#define GREATER 269
-#define PRINT 270
-#define EOL 271
-#define LPAR 272
-#define RPAR 273
-#define FLOAT 274
-#define ID 275
-#define ASSIGN 276
-#define WHILE 277
-#define LBRACK 278
-#define RBRACK 279
-#define TRUE 280
-#define FALSE 281
-#define STRS 282
-#define IF 283
-#define DO 284
-#define FOR 285
-#define INCR 286
-#define TO 287
+#define NOTEQUAL 268
+#define LESS 269
+#define GREATER 270
+#define PRINT 271
+#define EOL 272
+#define LPAR 273
+#define RPAR 274
+#define FLOAT 275
+#define ID 276
+#define ASSIGN 277
+#define WHILE 278
+#define LBRACK 279
+#define RBRACK 280
+#define TRUE 281
+#define FALSE 282
+#define STRS 283
+#define IF 284
+#define DO 285
+#define FOR 286
+#define INCR 287
+#define TO 288
+#define NOT 289
+#define LESSEQUAL 290
+#define GREATEREQUAL 291
 
 
 
@@ -116,7 +124,7 @@ typedef union YYSTYPE
     expr *exp; 
 }
 /* Line 1529 of yacc.c.  */
-#line 120 "pond.tab.h"
+#line 128 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
