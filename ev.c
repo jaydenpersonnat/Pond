@@ -9,6 +9,7 @@
 #include <math.h>
 
 char *to_concrete(expr *expression);
+expr *eval(expr *expression);
 
 char buffer[INT_SIZE];
 
@@ -62,16 +63,54 @@ expr *create_print_node(expr *exp)
     return print_exp; 
 }
 
-expr *create_doloop_node(int iterations, expr *exp)
+expr *create_eval_error(char *msg)
 {
-    expr *doloop_exp = malloc(sizeof(DOLOOP)); 
-    DOLOOP doloop; 
-    doloop.type = DOL; 
-    doloop.exp = exp; 
-    doloop.iterations = iterations; 
-    doloop_exp->doloop = doloop; 
-    return doloop_exp; 
+    expr *eval_error_exp = malloc(sizeof(EVALERROR));
+    EVALERROR error;
+    error.type = ERROR;
+    strcpy(error.msg, msg); 
+    eval_error_exp->error = error; 
+    return eval_error_exp; 
 }
+
+// expr *append_expr_lst(expr *exp, exprlist *list)
+// {
+//     expr *list_exp = malloc(sizeof(exprlist)); 
+//     exprlist explist;
+//     expr_node *new_node = malloc(sizeof(expr_node));
+//     new_node->next = NULL; 
+//     new_node->node = exp; 
+
+//     if (list == NULL)
+//     {
+//         explist.type = LIST; 
+//         explist.head = new_node;
+//         explist.tail = new_node; 
+//         list_exp->exprlist = explist;
+
+//         return list_exp;
+//     }
+//     else 
+//     {
+//         list->tail->next = new_node;
+//         list->tail = new_node; 
+
+//         list_exp->exprlist = *list; 
+//         return list_exp; 
+
+//     }
+// }
+
+// expr *create_doloop_node(int iterations, expr *exp)
+// {
+//     expr *doloop_exp = malloc(sizeof(DOLOOP)); 
+//     DOLOOP doloop; 
+//     doloop.type = DOL; 
+//     doloop.exp = exp; 
+//     doloop.iterations = iterations; 
+//     doloop_exp->doloop = doloop; 
+//     return doloop_exp; 
+// }
 
 // expr *create_if_node(expr *cond, expr *body)
 // {
@@ -104,6 +143,21 @@ expr *create_binop_node(enum bops op, expr *left, expr *right)
     binop_expr->binop = binop;
     return binop_expr; 
 }
+
+expr *create_seq_node(enum bops op, expr *left, expr *right)
+{
+    expr *binop_expr = malloc(sizeof(BINOP));
+    BINOP binop; 
+    binop.type = BINARYOP; 
+    binop.op = op; 
+    binop.left = left; 
+    binop.right = right; 
+    binop_expr->binop = binop;
+    return binop_expr; 
+}
+
+
+
 
 expr *unopeval(UNOP u_exp)
 {
@@ -140,7 +194,6 @@ expr *binopeval(BINOP b_exp)
                 return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->integer.value);
             else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->decimal.type == DECIMAL) 
                 return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->decimal.value);
-            // add error message here 
         }
         case MINUS : 
         {
@@ -154,6 +207,7 @@ expr *binopeval(BINOP b_exp)
                 return create_dec_node(DECIMAL, b_exp.left->decimal.value - b_exp.right->decimal.value);
         }
         case TIMES : 
+        {
             if (b_exp.left->integer.type == NUM && b_exp.right->integer.type == NUM) 
                 return create_int_node(NUM, b_exp.left->integer.value * b_exp.right->integer.value);
             else if (b_exp.left->integer.type == NUM && b_exp.right->decimal.type == DECIMAL) 
@@ -161,10 +215,16 @@ expr *binopeval(BINOP b_exp)
             else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->integer.type == NUM) 
                 return create_dec_node(DECIMAL, b_exp.left->decimal.value * b_exp.right->integer.value);
             else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->decimal.type == DECIMAL) 
-                return create_dec_node(DECIMAL, b_exp.left->decimal.value * b_exp.right->decimal.value);
+                return create_dec_node(DECIMAL, b_exp.left->decimal.value * b_exp.right->decimal.value);            
+        }
         case DIVIDE : 
             {
             // Handle divide by zero error
+            if (b_exp.left->integer.type == NUM && b_exp.right->integer.value == 0)
+            {
+                // add in error type
+                return create_eval_error("EvalError: Division by Zero");
+            }
             return create_int_node(NUM, b_exp.left->integer.value / b_exp.right->integer.value); 
             }
         case MODULO :
@@ -184,7 +244,6 @@ expr *binopeval(BINOP b_exp)
         case LESSTHANEQUAL: 
             return create_bool_node(BOOL, b_exp.left->integer.value <= b_exp.right->integer.value? true: false);
     }
-
 }
 
 expr *eval(expr *expression)
@@ -220,21 +279,38 @@ expr *eval(expr *expression)
         printf("> %s\n", to_concrete(eval(expression->print.exp)));
         return expression; 
     }
-    else if (expression->doloop.type == DOL)
-    {
-        for (int i = 0; i < expression->doloop.iterations; i++)
-        {
-            // expr *exp = expression->doloop.exp;
-            eval(expression->doloop.exp);
-            // printf("> %s\n", to_concrete(eval(exp))); 
-            // expr *exp = eval(expression->doloop.exp); 
-            // free(exp); 
-            // print(5);
-            // PRINT(NUM(5))) -> NUM 5
+    // else if (expression->doloop.type == DOL)
+    // {
+    //     for (int i = 0; i < expression->doloop.iterations; i++)
+    //     {
+    //         // expr *exp = expression->doloop.exp;
+    //         eval(expression->doloop.exp);
+    //         // printf("> %s\n", to_concrete(eval(exp))); 
+    //         // expr *exp = eval(expression->doloop.exp); 
+    //         // free(exp); 
+    //         // print(5);
+    //         // PRINT(NUM(5))) -> NUM 5
             
-        }
+    //     }
+    //     return expression; 
+    // }
+    else if (expression->error.type == ERROR)
+    {
+        // printf("> error: %s\n", expression->error.msg);
         return expression; 
     }
+    // else if (expression->exprlist.type == LIST)
+    // {
+    //     expr_node *ptr = expression->exprlist.head;
+    //     while (ptr != NULL)
+    //     {
+    //         ptr->node = eval(ptr->node);
+    //         ptr = ptr->next; 
+    //     }
+
+    //     return expression;
+    // }
+    
     else
     {
         return expression;
@@ -286,6 +362,11 @@ char *to_concrete(expr *expression)
         strcpy(buffer, expression->string.value);
 
         // free(expression); 
+        return buffer; 
+    }
+    else if (expression->error.type == ERROR)
+    {
+        strcpy(buffer, expression->error.msg);
         return buffer; 
     }
     else

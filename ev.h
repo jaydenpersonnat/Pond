@@ -12,11 +12,10 @@
 struct expr; 
 struct UNOP; 
 struct BINOP;
+struct SEQ; 
 struct ASSIGNM; 
 struct IF_S; 
 struct PRINTI; 
-// struct exprlist;
-// struct last_el; 
 
 enum uops{
     ABSV,
@@ -52,9 +51,10 @@ enum types{
     CONDITIONAL, 
     PRINTING, 
     DOL, 
+    ERROR,
+    SEQUENCE, 
 };
 
-// Basic Data Types 
 typedef struct INT
 {
     enum types type;
@@ -112,6 +112,15 @@ typedef struct BINOP
 }
 BINOP;
 
+typedef struct SEQ
+{
+    enum types type; 
+    enum bops op; 
+    struct expr *left;
+    struct expr *right; 
+}
+SEQ;
+
 typedef struct IF_S
 {
     enum types type; 
@@ -135,20 +144,11 @@ typedef struct PRINTI
 }
 PRINTI; 
 
-
-// typedef struct 
-// {
-//     struct exprlist *last; 
-// }
-// last_el;
-
-// linked list of expressions 
-// typedef struct exprlist
-// {
-//     struct expr node; 
-//     struct exprlist *next;  
-// }
-// exprlist; 
+typedef struct EVALERROR
+{
+    enum types type; 
+    char msg[MAX_STRING_SIZE];
+}EVALERROR;
 
 typedef struct expr
 {
@@ -164,10 +164,11 @@ typedef struct expr
         BINOP binop; 
         PRINTI print; 
         DOLOOP doloop; 
+        EVALERROR error; 
+        SEQ sequence; 
     };
 }
 expr; 
-
 
 
 expr *create_int_node(enum types type, int val);
@@ -177,10 +178,10 @@ expr *create_str_node(enum types type, char *val);
 expr *create_varid_node(char *varidname);
 expr *create_binop_node(enum bops op, expr *left, expr *right);
 expr *create_unop_node(enum uops op, expr *exp); 
-// expr *create_if_node(expr *cond, expr *body);
+
 expr *create_print_node(expr *exp);
 expr *create_doloop_node(int iterations, expr *exp);
-
+expr *create_eval_error(char *msg);
 
 expr *eval(expr *expression); 
 char *to_concrete(expr *expression);

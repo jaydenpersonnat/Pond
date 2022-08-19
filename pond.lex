@@ -33,6 +33,8 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 ")"    { return RPAR; }
 "{"    { return LBRACK; }
 "}"    { return RBRACK; }
+"["    { return LSQUARE; }
+"]"    { return RSQUARE; }
 "!"    { return FACT; }
 "=="   { return EQUALS; }
 ">"    { return GREATER; }
@@ -49,20 +51,17 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "not"  { return NOT; }
 "TRUE"  { return TRUE; }
 "FALSE"  { return FALSE; }
-
 "print" { return PRINT; }
-
 "while" {return WHILE; }
-
 
 [0-9]+ { yylval.intval = atoi(yytext); return NUMBER; }
 {ID}   { strcpy(yylval.strval, yytext); return ID; }
 {DECIMAL} {yylval.fval = atof(yytext); return FLOAT; }
 {STRING} { strcpy(yylval.strval, yytext); return STRS; }
 
-
 ";"     { return EOL; }
 [ \t \n]  { /* ignore whitespace */ }
+
 %%
 
 

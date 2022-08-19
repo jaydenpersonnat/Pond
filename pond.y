@@ -18,6 +18,7 @@
     double fval; 
     char strval[60]; 
     expr *exp; 
+    // exprlist list; 
 }
 
 %token NUMBER 
@@ -41,11 +42,13 @@
 %token TO 
 %token NOT 
 %token LESSEQUAL GREATEREQUAL 
+%token LSQUARE RSQUARE
 
 %type <exp> exp
 %type <intval> NUMBER 
 %type <strval> ID STRS
 %type <fval> FLOAT 
+// %type <list> explist
 
 %left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL 
 %left ADD SUB
@@ -80,7 +83,9 @@ program:
                 }
 ;
 
-
+// explist: exp explist { $$ = (append_expr_list($1, $2))->exprlist; }
+//          | exp      { $$ = append_expr_lst($1, NULL)->exprlist; }
+// ;
 
 exp: 
   | NUMBER        { $$ = create_int_node(NUM, $1); }
@@ -125,10 +130,10 @@ int main(int argc, char **argv)
         printf("no such file %s\n", argv[1]);
         return 1;
     }
-    yyparse(); 
+    yyparse();   
     fclose(yyin);
-}
-
+}  
+  
 int yyerror(char *s)
 {
     fprintf(stderr, "error: %s\n", s); 

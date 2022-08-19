@@ -156,7 +156,6 @@ The above loop prints the number 20 a total of 20 times.
 
 
 ##### Running? 
-A requirements.txt file will be added in the future but to run the program:
 ```
 make pond
 ./pond [filename].pond

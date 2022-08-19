@@ -72,7 +72,9 @@
      TO = 288,
      NOT = 289,
      LESSEQUAL = 290,
-     GREATEREQUAL = 291
+     GREATEREQUAL = 291,
+     LSQUARE = 292,
+     RSQUARE = 293
    };
 #endif
 /* Tokens.  */
@@ -110,6 +112,8 @@
 #define NOT 289
 #define LESSEQUAL 290
 #define GREATEREQUAL 291
+#define LSQUARE 292
+#define RSQUARE 293
 
 
 
@@ -122,9 +126,10 @@ typedef union YYSTYPE
     double fval; 
     char strval[60]; 
     expr *exp; 
+    // exprlist list; 
 }
 /* Line 1529 of yacc.c.  */
-#line 128 "pond.tab.h"
+#line 133 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
