@@ -1,6 +1,15 @@
 
-do 5
-{
-    x = 3;
-    print(x);
-}
+** This is a pond, a "programming" 
+language written in C 
+
+**
+
+x = 5 + 3;
+
+x = x + 5;
+x = x + 5;
+x = x + 5;
+
+
+
+print(x);

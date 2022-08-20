@@ -101,16 +101,16 @@ expr *create_eval_error(char *msg)
 //     }
 // }
 
-// expr *create_doloop_node(int iterations, expr *exp)
-// {
-//     expr *doloop_exp = malloc(sizeof(DOLOOP)); 
-//     DOLOOP doloop; 
-//     doloop.type = DOL; 
-//     doloop.exp = exp; 
-//     doloop.iterations = iterations; 
-//     doloop_exp->doloop = doloop; 
-//     return doloop_exp; 
-// }
+expr *create_doloop_node(int iterations, expr *exp)
+{
+    expr *doloop_exp = malloc(sizeof(DOLOOP)); 
+    DOLOOP doloop; 
+    doloop.type = DOL; 
+    doloop.exp = exp; 
+    doloop.iterations = iterations; 
+    doloop_exp->doloop = doloop; 
+    return doloop_exp; 
+}
 
 // expr *create_if_node(expr *cond, expr *body)
 // {
@@ -283,6 +283,36 @@ expr *eval(expr *expression)
         eval(expression->sequence.right); 
         return expression; 
     }
+    else if (expression->doloop.type == DOL)
+    {
+        for (int i = 0; i < expression->doloop.iterations; i++)
+        {
+            // expr *exp = expression->doloop.exp;
+            eval(expression->doloop.exp);
+            // printf("> %s\n", to_concrete(eval(exp))); 
+            // expr *exp = eval(expression->doloop.exp); 
+            // free(exp); 
+            // print(5);
+            // PRINT(NUM(5))) -> NUM 5
+            
+        }
+        return expression; 
+    }
+    // else if 
+    // {
+    //     for (int i = 0; i < expression->doloop.iterations; i++)
+    //     {
+    //         // expr *exp = expression->doloop.exp;
+    //         eval(expression->doloop.exp);
+    //         // printf("> %s\n", to_concrete(eval(exp))); 
+    //         // expr *exp = eval(expression->doloop.exp); 
+    //         // free(exp); 
+    //         // print(5);
+    //         // PRINT(NUM(5))) -> NUM 5
+            
+    //     }
+    //     return expression; 
+    // }
 
     else if (expression->error.type == ERROR)
     {

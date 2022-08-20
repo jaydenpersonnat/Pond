@@ -22,7 +22,10 @@
 }
 
 %token NUMBER 
-%token ADD SUB MUL DIV ABS MOD POW FACT
+%token ADD SUB 
+%token MUL DIV ABS MOD 
+%token POW 
+%token FACT
 %token EQUALS NOTEQUAL 
 %token LESS GREATER 
 %token PRINT 
@@ -50,16 +53,21 @@
 %type <fval> FLOAT 
 // %type <list> explist
 
-%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL EOL ASSIGN
+
+// figure out precedence and associativy of operators 
+%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL ASSIGN EOL 
 %left ADD SUB
 %left MUL DIV MOD
 %right POW
+
+%nonassoc NOT 
+%nonassoc ABS 
+%nonassoc FACT
 
 
 %%
 program: 
   exp      { eval($1);}
- | DO NUMBER LBRACK exp RBRACK { for (int i = 0; i < $2; i++)  eval($4);}
  | FOR ID ASSIGN NUMBER TO ID ASSIGN NUMBER INCR NUMBER LBRACK exp RBRACK
                 {
                     for (int i = $4; i <= $8; i = i + $10)
@@ -67,7 +75,7 @@ program:
                         eval($12);
                     }
                 }
- | program WHILE exp LBRACK exp RBRACK 
+ | program WHILE exp LBRACK exp RBRACK  
                 {
                     while (strcmp(to_concrete(eval($3)), "TRUE") == 0)
                     {
@@ -80,7 +88,7 @@ program:
                     {
                         eval($5);
                     }
-                }
+                } 
 ;
 
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
@@ -100,7 +108,6 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | exp NOTEQUAL exp {$$ = create_binop_node(NOTEQUALTO, $1, $3); }
   | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); } 
   | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); } 
-  | exp LESS exp    {$$ = create_binop_node(LESSTHAN, $1, $3); }
   | exp GREATEREQUAL exp {$$ = create_binop_node(GREATERTHANEQUAL, $1, $3);}
   | exp LESSEQUAL exp {$$ = create_binop_node(LESSTHANEQUAL, $1, $3); }
   | exp LESS
@@ -112,6 +119,7 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
   | exp EOL              { $$ = $1; }
   | exp EOL exp          {$$ = create_seq_node($1, $3); }
+  | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}
  ;  
 %%
   

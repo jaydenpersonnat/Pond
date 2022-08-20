@@ -61,6 +61,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 
 ";"     { return EOL; }
 [ \t \n]  { /* ignore whitespace */ }
+['*']{2}([^\\]|\\.|\\\n)*['*']{2} { /* ignore whitespace */ }
 
 %%
 

@@ -58,5 +58,7 @@ expr *lookup(char *id)
     }
 
     // change later so returns error - create type NONE or NOT FOUND
-    return create_int_node(NUM, -1); 
+    char varidname[MAX_STRING_SIZE];
+    snprintf(varidname, sizeof(varidname), "variable \"%s\" not found", id);
+    return create_eval_error(varidname);
 }
