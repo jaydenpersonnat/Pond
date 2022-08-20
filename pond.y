@@ -78,6 +78,7 @@ program:
  | 
 ;
 
+
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
   | TRUE          { $$ = create_bool_node(BOOL, true);}
@@ -108,9 +109,9 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | exp EOL exp          {$$ = create_seq_node($1, $3); }
   | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}
   | FOR ID ASSIGN NUMBER TO NUMBER INCR NUMBER LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10); }
- ;  
-%%
-  
+ ;   
+%%   
+   
 
 int main(int argc, char **argv)
 {

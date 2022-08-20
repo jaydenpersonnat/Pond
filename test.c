@@ -64,6 +64,7 @@ enum types{
     DOL, 
     ERROR,
     SEQUENCE, 
+    FORL
 };
 
 typedef struct INT
@@ -483,7 +484,7 @@ expr *eval(expr *expression)
     }
     else if (expression->assign.type == ASSIGNMENT)
     {
-        expression->assign.exp =  eval(expression->assign.exp);
+        expression->assign.exp = eval(expression->assign.exp);
         insert(expression->assign.varidname, expression->assign.exp); 
         return expression; 
     }
@@ -509,7 +510,7 @@ expr *eval(expr *expression)
     }
     else if (expression->forloop.type == FORL)
     {
-        for (int i = expression->forloop.end; i < expression->forloop.end; i = i + expression->forloop.incr)
+        for (int i = expression->forloop.start; i < expression->forloop.end; i = i + expression->forloop.incr)
         {
             eval(expression->forloop.exp);
         }
@@ -659,7 +660,7 @@ expr *lookup(char *id)
     }
 
     // change later so returns error - create type NONE or NOT FOUND
-    return create_int_node(NUM, -1); 
+    return create_int_node(NUM, 2); 
 }
 
 
@@ -668,14 +669,16 @@ int main(void)
 {
 
     expr *assign = create_assign_node("x", create_int_node(NUM, 0));
+    eval(assign);
     // int x = 0; 
     // expr *doloop = create_doloop_node(3, create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
 
-    eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
-    eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
-    eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
+    eval(create_doloop_node(2, create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5)))));
+    // eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
+    // eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
+    // eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
 
-    eval(create_print_node(create_varid_node("x")))
+    eval(create_print_node(create_varid_node("x")));
     // eval(create_print_node(create_varid_node("x")));
     // eval(create_seq_node(assign, create_seq_node(doloop,create_print_node(create_varid_node("x")))));
     // printf("%d\n", x);

@@ -504,10 +504,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    69,    69,    70,    78,    81,    82,    83,    84,    85,
-      86,    87,    88,    89,    90,    91,    92,    93,    94,    95,
-      96,    97,    98,    99,   100,   101,   102,   103,   104,   105,
-     106,   107,   108,   109,   110
+       0,    69,    69,    70,    78,    82,    83,    84,    85,    86,
+      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
+      97,    98,    99,   100,   101,   102,   103,   104,   105,   106,
+     107,   108,   109,   110,   111
 };
 #endif
 
@@ -1502,147 +1502,147 @@ yyreduce:
     break;
 
   case 5:
-#line 81 "pond.y"
+#line 82 "pond.y"
     { (yyval.exp) = create_int_node(NUM, (yyvsp[(1) - (1)].intval)); ;}
     break;
 
   case 6:
-#line 82 "pond.y"
+#line 83 "pond.y"
     { (yyval.exp) = create_dec_node(DECIMAL, (yyvsp[(1) - (1)].fval)); ;}
     break;
 
   case 7:
-#line 83 "pond.y"
+#line 84 "pond.y"
     { (yyval.exp) = create_bool_node(BOOL, true);;}
     break;
 
   case 8:
-#line 84 "pond.y"
+#line 85 "pond.y"
     { (yyval.exp) = create_bool_node(BOOL, false);;}
     break;
 
   case 9:
-#line 85 "pond.y"
+#line 86 "pond.y"
     { (yyval.exp) = create_str_node(STR, (yyvsp[(1) - (1)].strval)); ;}
     break;
 
   case 10:
-#line 86 "pond.y"
+#line 87 "pond.y"
     { (yyval.exp) = create_binop_node(PLUS, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 11:
-#line 87 "pond.y"
+#line 88 "pond.y"
     { (yyval.exp) = create_binop_node(MINUS, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 12:
-#line 88 "pond.y"
+#line 89 "pond.y"
     {(yyval.exp) = create_binop_node(TIMES, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 13:
-#line 89 "pond.y"
+#line 90 "pond.y"
     {(yyval.exp) = create_binop_node(DIVIDE, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 14:
-#line 90 "pond.y"
+#line 91 "pond.y"
     {(yyval.exp) = create_binop_node(MODULO, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp));;}
     break;
 
   case 15:
-#line 91 "pond.y"
+#line 92 "pond.y"
     {(yyval.exp) = create_unop_node(ABSV, (yyvsp[(2) - (3)].exp)); ;}
     break;
 
   case 16:
-#line 92 "pond.y"
+#line 93 "pond.y"
     {(yyval.exp) = create_binop_node(POWER, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp));;}
     break;
 
   case 17:
-#line 93 "pond.y"
+#line 94 "pond.y"
     {(yyval.exp) = create_unop_node(FACTORIAL, (yyvsp[(1) - (2)].exp)); ;}
     break;
 
   case 18:
-#line 94 "pond.y"
+#line 95 "pond.y"
     {(yyval.exp) = create_binop_node(EQUALTO, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 19:
-#line 95 "pond.y"
+#line 96 "pond.y"
     {(yyval.exp) = create_binop_node(NOTEQUALTO, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 20:
-#line 96 "pond.y"
+#line 97 "pond.y"
     {(yyval.exp) = create_binop_node(LESSTHAN, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 21:
-#line 97 "pond.y"
+#line 98 "pond.y"
     {(yyval.exp) = create_binop_node(GREATERTHAN, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 22:
-#line 98 "pond.y"
+#line 99 "pond.y"
     {(yyval.exp) = create_binop_node(GREATERTHANEQUAL, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp));;}
     break;
 
   case 23:
-#line 99 "pond.y"
+#line 100 "pond.y"
     {(yyval.exp) = create_binop_node(LESSTHANEQUAL, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 25:
-#line 101 "pond.y"
+#line 102 "pond.y"
     {(yyval.exp) = create_unop_node(NOTOP, (yyvsp[(2) - (2)].exp)); ;}
     break;
 
   case 26:
-#line 102 "pond.y"
+#line 103 "pond.y"
     {(yyval.exp) = (yyvsp[(2) - (3)].exp);;}
     break;
 
   case 27:
-#line 103 "pond.y"
+#line 104 "pond.y"
     {(yyval.exp) = create_unop_node(NEGATIVE, (yyvsp[(2) - (2)].exp)); ;}
     break;
 
   case 28:
-#line 104 "pond.y"
+#line 105 "pond.y"
     { (yyval.exp) = create_assign_node((yyvsp[(1) - (3)].strval), (yyvsp[(3) - (3)].exp));;}
     break;
 
   case 29:
-#line 105 "pond.y"
+#line 106 "pond.y"
     {(yyval.exp) = create_varid_node((yyvsp[(1) - (1)].strval));;}
     break;
 
   case 30:
-#line 106 "pond.y"
+#line 107 "pond.y"
     { (yyval.exp) = create_print_node((yyvsp[(3) - (4)].exp)); ;}
     break;
 
   case 31:
-#line 107 "pond.y"
+#line 108 "pond.y"
     { (yyval.exp) = (yyvsp[(1) - (2)].exp); ;}
     break;
 
   case 32:
-#line 108 "pond.y"
+#line 109 "pond.y"
     {(yyval.exp) = create_seq_node((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 33:
-#line 109 "pond.y"
+#line 110 "pond.y"
     { (yyval.exp) = create_doloop_node((yyvsp[(2) - (5)].intval), (yyvsp[(4) - (5)].exp));;}
     break;
 
   case 34:
-#line 110 "pond.y"
+#line 111 "pond.y"
     { (yyval.exp) = create_forloop_node((yyvsp[(2) - (11)].strval), (yyvsp[(4) - (11)].intval), (yyvsp[(6) - (11)].intval), (yyvsp[(8) - (11)].intval), (yyvsp[(10) - (11)].exp)); ;}
     break;
 
@@ -1862,9 +1862,9 @@ yyreturn:
 }
 
 
-#line 112 "pond.y"
-
-  
+#line 113 "pond.y"
+   
+   
 
 int main(int argc, char **argv)
 {

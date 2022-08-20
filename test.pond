@@ -1,10 +1,9 @@
 
-for i = 0 to 4 incr 1
+
+
+
+for i = 5 to 20 incr 1
 {
-    print(3);
+    print(i);
 };
 
-x = 5;
-print(x);
-y = 3;
-print(y);

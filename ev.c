@@ -160,10 +160,11 @@ expr *create_forloop_node(char *varidname,int start, int end, int incr, expr *ex
     expr *forloop_expr = malloc(sizeof(FORLOOP));
     FORLOOP forloop; 
     forloop.type = FORL;
-    forloop.start = start;
     strcpy(forloop.varidname, varidname);
+    forloop.start = start;
     forloop.end = end; 
     forloop.incr = incr; 
+    forloop.exp = exp; 
     forloop_expr->forloop = forloop;
     return forloop_expr; 
 }
@@ -306,8 +307,9 @@ expr *eval(expr *expression)
     }
     else if (expression->forloop.type == FORL)
     {
-        for (int i = expression->forloop.end; i < expression->forloop.end; i = i + expression->forloop.incr)
+        for (int i = expression->forloop.start; i <= expression->forloop.end; i = i + expression->forloop.incr)
         {
+            eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, i)));
             eval(expression->forloop.exp);
         }
 
