@@ -155,7 +155,18 @@ expr *create_seq_node(expr *left, expr *right)
     return seq_expr; 
 }
 
-
+expr *create_forloop_node(char *varidname,int start, int end, int incr, expr *exp)
+{
+    expr *forloop_expr = malloc(sizeof(FORLOOP));
+    FORLOOP forloop; 
+    forloop.type = FORL;
+    forloop.start = start;
+    strcpy(forloop.varidname, varidname);
+    forloop.end = end; 
+    forloop.incr = incr; 
+    forloop_expr->forloop = forloop;
+    return forloop_expr; 
+}
 
 
 expr *unopeval(UNOP u_exp)
@@ -245,6 +256,7 @@ expr *binopeval(BINOP b_exp)
     }
 }
 
+
 expr *eval(expr *expression)
 {
     if (expression->integer.type == NUM) return expression; 
@@ -285,39 +297,38 @@ expr *eval(expr *expression)
     }
     else if (expression->doloop.type == DOL)
     {
+        // fix do loop later
         for (int i = 0; i < expression->doloop.iterations; i++)
         {
-            // expr *exp = expression->doloop.exp;
             eval(expression->doloop.exp);
-            // printf("> %s\n", to_concrete(eval(exp))); 
-            // expr *exp = eval(expression->doloop.exp); 
-            // free(exp); 
-            // print(5);
-            // PRINT(NUM(5))) -> NUM 5
-            
         }
         return expression; 
     }
-    // else if 
-    // {
-    //     for (int i = 0; i < expression->doloop.iterations; i++)
-    //     {
-    //         // expr *exp = expression->doloop.exp;
-    //         eval(expression->doloop.exp);
-    //         // printf("> %s\n", to_concrete(eval(exp))); 
-    //         // expr *exp = eval(expression->doloop.exp); 
-    //         // free(exp); 
-    //         // print(5);
-    //         // PRINT(NUM(5))) -> NUM 5
-            
-    //     }
-    //     return expression; 
-    // }
+    else if (expression->forloop.type == FORL)
+    {
+        for (int i = expression->forloop.end; i < expression->forloop.end; i = i + expression->forloop.incr)
+        {
+            eval(expression->forloop.exp);
+        }
 
+        return expression; 
+        // eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, expression->forloop.start)));
+        // while (eval(create_varid_node(expression->forloop.varidname))->integer.value !=  expression->forloop.end)
+        // {
+        //     eval(expression->forloop.exp);
+        //     eval(create_assign_node(expression->forloop.varidname, create_binop_node(PLUS, create_varid_node(expression->forloop.varidname), create_int_node(NUM, expression->forloop.incr))));
+        // }
+        // return expression; 
+
+    }
     else if (expression->error.type == ERROR)
     {
         return expression; 
     }
+    // else if (expression->forloop.type == FOR)
+    // {
+    //     // create_assign_node(node,)
+    // }
     
     else
     {

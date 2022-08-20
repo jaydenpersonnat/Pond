@@ -1,7 +1,10 @@
-#include <stdbool.h> 
 
 #ifndef SYM_H
 #define SYM_H
+
+
+#include <stdbool.h> 
+
 
 #define INT_SIZE 30
 #define MAX_FLOAT_SIZE 6
@@ -16,6 +19,8 @@ struct SEQ;
 struct ASSIGNM; 
 struct IF_S; 
 struct PRINTI; 
+struct FORLOOP;
+
 
 enum uops{
     ABSV,
@@ -53,6 +58,9 @@ enum types{
     DOL, 
     ERROR,
     SEQUENCE, 
+    FUNCTION, 
+    FORL,
+    // WHILE, 
 };
 
 typedef struct INT
@@ -147,7 +155,20 @@ typedef struct EVALERROR
 {
     enum types type; 
     char msg[MAX_STRING_SIZE];
-}EVALERROR;
+}
+EVALERROR;
+
+typedef struct FORLOOP
+{
+    enum types type; 
+    char varidname[MAX_STRING_SIZE];
+    int start;
+    int end; 
+    int incr;
+    struct expr *exp; 
+}
+FORLOOP;
+
 
 typedef struct expr
 {
@@ -164,7 +185,8 @@ typedef struct expr
         PRINTI print; 
         DOLOOP doloop; 
         EVALERROR error; 
-        SEQ sequence; 
+        SEQ sequence;
+        FORLOOP forloop;  
     };
 }
 expr; 
@@ -186,6 +208,7 @@ expr *create_seq_node(expr *left, expr *right);
 expr *eval(expr *expression); 
 char *to_concrete(expr *expression);
 expr *create_assign_node(char *varidname, expr *exp); 
+expr *create_forloop_node(char *varidname, int start, int end, int incr, expr *exp);
 
 
 #endif

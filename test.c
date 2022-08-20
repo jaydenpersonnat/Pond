@@ -21,6 +21,7 @@ struct SEQ;
 struct ASSIGNM; 
 struct IF_S; 
 struct PRINTI; 
+struct FORLOOP; 
 
 struct expr *lookup(char *id);
 void insert(char *id, struct expr *val);
@@ -105,6 +106,17 @@ typedef struct ASSIGNM
 }
 ASSIGNM; 
 
+typedef struct FORLOOP
+{
+    enum types type; 
+    char varidname[MAX_STRING_SIZE];
+    int start;
+    int end; 
+    int incr;
+    struct expr *exp; 
+}
+FORLOOP;
+
 typedef struct UNOP
 {
     enum types type; 
@@ -175,6 +187,7 @@ typedef struct expr
         DOLOOP doloop; 
         EVALERROR error; 
         SEQ sequence; 
+        FORLOOP forloop; 
     };
 }
 expr; 
@@ -345,7 +358,18 @@ expr *create_seq_node(expr *left, expr *right)
     return seq_expr; 
 }
 
-
+expr *create_forloop_node(char *varidname,int start, int end, int incr, expr *exp)
+{
+    expr *forloop_expr = malloc(sizeof(FORLOOP));
+    FORLOOP forloop; 
+    forloop.type = FORL;
+    forloop.start = start;
+    strcpy(forloop.varidname, varidname);
+    forloop.end = end; 
+    forloop.incr = incr; 
+    forloop_expr->forloop = forloop;
+    return forloop_expr; 
+}
 
 
 expr *unopeval(UNOP u_exp)
@@ -435,6 +459,7 @@ expr *binopeval(BINOP b_exp)
     }
 }
 
+
 expr *eval(expr *expression)
 {
     if (expression->integer.type == NUM) return expression; 
@@ -458,8 +483,8 @@ expr *eval(expr *expression)
     }
     else if (expression->assign.type == ASSIGNMENT)
     {
-        // expression->assign.exp = eval(expression->assign.exp);
-        insert(expression->assign.varidname, eval(expression->assign.exp)); 
+        expression->assign.exp =  eval(expression->assign.exp);
+        insert(expression->assign.varidname, expression->assign.exp); 
         return expression; 
     }
     else if (expression->print.type == PRINTING)
@@ -475,31 +500,44 @@ expr *eval(expr *expression)
     }
     else if (expression->doloop.type == DOL)
     {
+        // fix do loop later
         for (int i = 0; i < expression->doloop.iterations; i++)
         {
-            // expr *exp = expression->doloop.exp;
             eval(expression->doloop.exp);
-            // printf("> %s\n", to_concrete(eval(exp))); 
-            // expr *exp = eval(expression->doloop.exp); 
-            // free(exp); 
-            // print(5);
-            // PRINT(NUM(5))) -> NUM 5
-            
         }
         return expression; 
     }
+    else if (expression->forloop.type == FORL)
+    {
+        for (int i = expression->forloop.end; i < expression->forloop.end; i = i + expression->forloop.incr)
+        {
+            eval(expression->forloop.exp);
+        }
 
+        return expression; 
+        // eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, expression->forloop.start)));
+        // while (eval(create_varid_node(expression->forloop.varidname))->integer.value !=  expression->forloop.end)
+        // {
+        //     eval(expression->forloop.exp);
+        //     eval(create_assign_node(expression->forloop.varidname, create_binop_node(PLUS, create_varid_node(expression->forloop.varidname), create_int_node(NUM, expression->forloop.incr))));
+        // }
+        // return expression; 
+
+    }
     else if (expression->error.type == ERROR)
     {
         return expression; 
     }
+    // else if (expression->forloop.type == FOR)
+    // {
+    //     // create_assign_node(node,)
+    // }
     
     else
     {
         return expression;
     }
 }
-
 // in else case to handle assignment and functions print nothing
 char *to_concrete(expr *expression)
 {
@@ -631,13 +669,13 @@ int main(void)
 
     expr *assign = create_assign_node("x", create_int_node(NUM, 0));
     // int x = 0; 
-    expr *doloop = create_doloop_node(3, create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
+    // expr *doloop = create_doloop_node(3, create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
 
-    // eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
-    // eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
-    // eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
+    eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
+    eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
+    eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
 
-    eval(create_print_node(create_varid_node("x")));
+    eval(create_print_node(create_varid_node("x")))
     // eval(create_print_node(create_varid_node("x")));
     // eval(create_seq_node(assign, create_seq_node(doloop,create_print_node(create_varid_node("x")))));
     // printf("%d\n", x);

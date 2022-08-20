@@ -46,7 +46,6 @@
 %token NOT 
 %token LESSEQUAL GREATEREQUAL 
 %token LSQUARE RSQUARE
-
 %type <exp> exp
 %type <intval> NUMBER 
 %type <strval> ID STRS
@@ -56,7 +55,7 @@
 
 // figure out precedence and associativy of operators 
 %left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL ASSIGN EOL 
-%left ADD SUB
+%left ADD SUB 
 %left MUL DIV MOD
 %right POW
 
@@ -75,20 +74,8 @@ program:
                         eval($12);
                     }
                 }
- | program WHILE exp LBRACK exp RBRACK  
-                {
-                    while (strcmp(to_concrete(eval($3)), "TRUE") == 0)
-                    {
-                        eval($5);
-                    }
-                }
- | program IF exp LBRACK exp RBRACK 
-                {
-                    if (strcmp(to_concrete(eval($3)), "TRUE") == 0)
-                    {
-                        eval($5);
-                    }
-                } 
+
+ | 
 ;
 
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
@@ -115,11 +102,12 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | LPAR exp RPAR  {$$ = $2;} 
   | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
   | ID ASSIGN exp    { $$ = create_assign_node($1, $3);}
-  | ID             {$$ = create_varid_node($1);}  
+  | ID             {$$ = create_varid_node($1);}   
   | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
-  | exp EOL              { $$ = $1; }
+  | exp EOL              { $$ = $1; } 
   | exp EOL exp          {$$ = create_seq_node($1, $3); }
   | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}
+  | FOR ID ASSIGN NUMBER TO NUMBER INCR NUMBER LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10); }
  ;  
 %%
   

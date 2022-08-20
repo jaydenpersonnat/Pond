@@ -60,8 +60,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 {STRING} { strcpy(yylval.strval, yytext); return STRS; }
 
 ";"     { return EOL; }
-[ \t \n]  { /* ignore whitespace */ }
-['*']{2}([^\\]|\\.|\\\n)*['*']{2} { /* ignore whitespace */ }
+[ \t \n] { /* ignore whitespace */ }
 
 %%
 

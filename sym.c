@@ -4,7 +4,10 @@
 #include <strings.h> 
 #include <ctype.h> 
 #include "sym.h"
+#include "ev.h"
 
+
+node *sym_table[TABLE_SIZE];
 
 // djb2 algorithm
 long hash(char *id)
@@ -60,5 +63,5 @@ expr *lookup(char *id)
     // change later so returns error - create type NONE or NOT FOUND
     char varidname[MAX_STRING_SIZE];
     snprintf(varidname, sizeof(varidname), "variable \"%s\" not found", id);
-    return create_eval_error(varidname);
+    return create_eval_error(varidname); 
 }
