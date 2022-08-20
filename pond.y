@@ -50,7 +50,7 @@
 %type <fval> FLOAT 
 // %type <list> explist
 
-%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL EOL
+%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL EOL ASSIGN
 %left ADD SUB
 %left MUL DIV MOD
 %right POW
@@ -108,7 +108,7 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | LPAR exp RPAR  {$$ = $2;} 
   | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
   | ID ASSIGN exp    { $$ = create_assign_node($1, $3);}
-  | ID             {$$ = create_varid_node($1);} 
+  | ID             {$$ = create_varid_node($1);}  
   | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
   | exp EOL              { $$ = $1; }
   | exp EOL exp          {$$ = create_seq_node($1, $3); }
