@@ -10,13 +10,12 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Thu Aug 18 12:59:38 2022
+# Make data base, printed on Sat Aug 20 01:18:29 2022
 
 # Variables
 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
- 
 # automatic
 ?F = $(notdir $?)
 # environment
@@ -162,9 +161,9 @@ VSCODE_PID = 651
 
 # Directories
 
-# . (device 16777234, inode 39443678): 17 files, no impossibilities.
+# . (device 16777234, inode 39443678): 19 files, no impossibilities.
 
-# 17 files, no impossibilities in 1 directories.
+# 19 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -184,6 +183,7 @@ all:
 # Not a target:
 .SUFFIXES:
 #  Implicit rule search has not been done.
+ 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -237,6 +237,6 @@ pond.y:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu Aug 18 12:59:38 2022
+# Finished Make data base on Sat Aug 20 01:18:29 2022
 
  

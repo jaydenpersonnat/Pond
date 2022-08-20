@@ -50,7 +50,7 @@
 %type <fval> FLOAT 
 // %type <list> explist
 
-%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL 
+%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL EOL
 %left ADD SUB
 %left MUL DIV MOD
 %right POW
@@ -58,13 +58,13 @@
 
 %%
 program: 
- | program exp     { eval($2);}
- | program DO NUMBER LBRACK exp RBRACK { for (int i = 0; i < $3; i++)  eval($5);}
- | program FOR ID ASSIGN NUMBER TO ID ASSIGN NUMBER INCR NUMBER LBRACK exp RBRACK
+  exp      { eval($1);}
+ | DO NUMBER LBRACK exp RBRACK { for (int i = 0; i < $2; i++)  eval($4);}
+ | FOR ID ASSIGN NUMBER TO ID ASSIGN NUMBER INCR NUMBER LBRACK exp RBRACK
                 {
-                    for (int i = $5; i <= $9; i = i + $11)
+                    for (int i = $4; i <= $8; i = i + $10)
                     {
-                        eval($13);
+                        eval($12);
                     }
                 }
  | program WHILE exp LBRACK exp RBRACK 
@@ -83,12 +83,7 @@ program:
                 }
 ;
 
-// explist: exp explist { $$ = (append_expr_list($1, $2))->exprlist; }
-//          | exp      { $$ = append_expr_lst($1, NULL)->exprlist; }
-// ;
-
-exp: 
-  | NUMBER        { $$ = create_int_node(NUM, $1); }
+exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
   | TRUE          { $$ = create_bool_node(BOOL, true);}
   | FALSE         { $$ = create_bool_node(BOOL, false);}
@@ -109,15 +104,17 @@ exp:
   | exp GREATEREQUAL exp {$$ = create_binop_node(GREATERTHANEQUAL, $1, $3);}
   | exp LESSEQUAL exp {$$ = create_binop_node(LESSTHANEQUAL, $1, $3); }
   | exp LESS
-  | NOT exp         {$$ = create_unop_node(NOTOP, $2); }
-  | LPAR exp RPAR  {$$ = $2;}
+  | NOT exp         {$$ = create_unop_node(NOTOP, $2); } 
+  | LPAR exp RPAR  {$$ = $2;} 
   | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
-  | ID             {$$ = create_varid_node($1);}
-  | ID ASSIGN exp EOL  { $$ = create_assign_node($1, $3);}
-  | PRINT LPAR exp RPAR EOL { $$ = create_print_node($3); }  
- ; 
+  | ID ASSIGN exp    { $$ = create_assign_node($1, $3);}
+  | ID             {$$ = create_varid_node($1);} 
+  | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
+  | exp EOL              { $$ = $1; }
+  | exp EOL exp          {$$ = create_seq_node($1, $3); }
+ ;  
 %%
- 
+  
 
 int main(int argc, char **argv)
 {

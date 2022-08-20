@@ -1,12 +1,202 @@
-#include "ev.h"
-#include "sym.h"
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
 #include <string.h>
 #include <strings.h>
 #include <ctype.h> 
-#include <math.h>
+#include <stdlib.h>
+
+#define INT_SIZE 30
+#define MAX_FLOAT_SIZE 6
+#define MAX_STRING_SIZE 500
+#define TABLE_SIZE 1000
+
+
+
+struct expr; 
+struct UNOP; 
+struct BINOP;
+struct SEQ; 
+struct ASSIGNM; 
+struct IF_S; 
+struct PRINTI; 
+
+struct expr *lookup(char *id);
+void insert(char *id, struct expr *val);
+
+
+
+enum uops{
+    ABSV,
+    FACTORIAL,
+    NEGATIVE, 
+    NOTOP, 
+};
+
+enum bops{
+    PLUS,
+    MINUS,
+    TIMES,
+    DIVIDE,
+    MODULO, 
+    POWER, 
+    EQUALTO, 
+    NOTEQUALTO, 
+    LESSTHAN,
+    GREATERTHAN,
+    LESSTHANEQUAL,
+    GREATERTHANEQUAL, 
+};
+
+enum types{
+    NUM,
+    DECIMAL, 
+    BOOL, 
+    STR,
+    BINARYOP, 
+    UNARYOP, 
+    VAR, 
+    ASSIGNMENT, 
+    CONDITIONAL, 
+    PRINTING, 
+    DOL, 
+    ERROR,
+    SEQUENCE, 
+};
+
+typedef struct INT
+{
+    enum types type;
+    int value; 
+}
+INT;
+typedef struct DEC 
+{
+    enum types type; 
+    float value; 
+}
+DEC; 
+typedef struct BOOLEAN
+{
+    enum types type; 
+    bool value; 
+}
+BOOLEAN;
+typedef struct STRING
+{
+    enum types type; 
+    char value[MAX_STRING_SIZE]; 
+}
+STRING;
+
+typedef struct VARID
+{
+    enum types type; 
+    char varidname[MAX_STRING_SIZE];
+}
+VARID; 
+
+typedef struct ASSIGNM
+{
+    enum types type; 
+    char varidname[MAX_STRING_SIZE];
+    struct expr *exp; 
+}
+ASSIGNM; 
+
+typedef struct UNOP
+{
+    enum types type; 
+    enum uops op; 
+    struct expr *exp; 
+}
+UNOP; 
+
+typedef struct BINOP
+{
+    enum types type; 
+    enum bops op; 
+    struct expr *left;
+    struct expr *right; 
+}
+BINOP;
+
+typedef struct SEQ
+{
+    enum types type; 
+    struct expr *left;
+    struct expr *right; 
+}
+SEQ;
+
+typedef struct IF_S
+{
+    enum types type; 
+    struct expr *cond; 
+    struct expr *body; 
+}
+IF_S; 
+
+typedef struct DOLOOP
+{
+    enum types type; 
+    int iterations; 
+    struct expr *exp;
+}
+DOLOOP; 
+
+typedef struct PRINTI
+{
+    enum types type; 
+    struct expr *exp; 
+}
+PRINTI; 
+
+typedef struct EVALERROR
+{
+    enum types type; 
+    char msg[MAX_STRING_SIZE];
+}EVALERROR;
+
+typedef struct expr
+{
+    union {
+        INT integer;
+        DEC decimal; 
+        BOOLEAN boolean; 
+        STRING string; 
+        VARID varid; 
+        ASSIGNM assign; 
+        IF_S conditional; 
+        UNOP unop; 
+        BINOP binop; 
+        PRINTI print; 
+        DOLOOP doloop; 
+        EVALERROR error; 
+        SEQ sequence; 
+    };
+}
+expr; 
+
+
+expr *create_int_node(enum types type, int val);
+expr *create_dec_node(enum types type, float val); 
+expr *create_bool_node(enum types type, bool val); 
+expr *create_str_node(enum types type, char *val); 
+expr *create_varid_node(char *varidname);
+expr *create_binop_node(enum bops op, expr *left, expr *right);
+expr *create_unop_node(enum uops op, expr *exp); 
+
+expr *create_print_node(expr *exp);
+expr *create_doloop_node(int iterations, expr *exp);
+expr *create_eval_error(char *msg);
+expr *create_seq_node(expr *left, expr *right);
+
+expr *eval(expr *expression); 
+char *to_concrete(expr *expression);
+expr *create_assign_node(char *varidname, expr *exp); 
+
 
 char *to_concrete(expr *expression);
 expr *eval(expr *expression);
@@ -268,8 +458,8 @@ expr *eval(expr *expression)
     }
     else if (expression->assign.type == ASSIGNMENT)
     {
-        expression->assign.exp =  eval(expression->assign.exp);
-        insert(expression->assign.varidname, expression->assign.exp); 
+        // expression->assign.exp = eval(expression->assign.exp);
+        insert(expression->assign.varidname, eval(expression->assign.exp)); 
         return expression; 
     }
     else if (expression->print.type == PRINTING)
@@ -343,3 +533,99 @@ char *to_concrete(expr *expression)
    
 }
 
+
+typedef struct node
+{
+    // possibly make union 
+
+    struct expr *value; 
+    char id[MAX_STRING_SIZE]; 
+    struct node* next; 
+}
+node;
+
+node *sym_table[TABLE_SIZE];
+
+// Hash function 
+long hash(char *id); 
+
+void init_hash_table(); 
+
+
+
+
+// djb2 algorithm
+long hash(char *id)
+{
+    long hash = 5381;
+    int c; 
+
+    while (c == *id++)
+    {
+        hash = ((hash << 5) + hash) + c; 
+    }
+
+    return hash % TABLE_SIZE; 
+}
+
+
+void init_hash_table()
+{
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        sym_table[i] = NULL; 
+    }
+}
+
+void insert(char *id, expr *val)
+{
+    node *new_node = (node *) malloc(sizeof(node)); 
+    strcpy(new_node->id, id); 
+    new_node->value = val; 
+
+    int index = hash(new_node->id); 
+
+    new_node->next = sym_table[index]; 
+    sym_table[index] = new_node; 
+
+    return; 
+}
+
+expr *lookup(char *id)
+{
+    int index = hash(id); 
+    node *cursor = sym_table[index]; 
+
+    while (cursor != NULL)
+    {
+        if (strcasecmp(id, cursor->id) == 0)
+        {
+            return cursor->value; 
+        }  
+        cursor = cursor->next; 
+    }
+
+    // change later so returns error - create type NONE or NOT FOUND
+    return create_int_node(NUM, -1); 
+}
+
+
+
+int main(void)
+{
+
+    expr *assign = create_assign_node("x", create_int_node(NUM, 0));
+    // int x = 0; 
+    for (int i = 0; i < 3; i++)
+    {
+        eval(create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 10))));    
+        // x = x + 10;
+    }
+
+    eval(create_print_node(create_varid_node("x")));
+    // printf("%d\n", x);
+    // expr *assign = create_assign_node("x", create_int_node(NUM, 25)); 
+    // expr *sequence = create_seq_node(assign, create_print_node(create_varid_node("x")));
+    // eval(sequence);
+
+} 

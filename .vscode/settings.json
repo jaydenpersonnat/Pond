@@ -1,6 +1,12 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
     "files.associations": {
-        "__node_handle": "c"
+        "__node_handle": "c",
+        "__string": "c",
+        "string": "c",
+        "system_error": "c",
+        "vector": "c",
+        "__functional_03": "c",
+        "functional": "c"
     }
 }

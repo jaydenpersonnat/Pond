@@ -115,7 +115,6 @@ BINOP;
 typedef struct SEQ
 {
     enum types type; 
-    enum bops op; 
     struct expr *left;
     struct expr *right; 
 }
@@ -182,6 +181,7 @@ expr *create_unop_node(enum uops op, expr *exp);
 expr *create_print_node(expr *exp);
 expr *create_doloop_node(int iterations, expr *exp);
 expr *create_eval_error(char *msg);
+expr *create_seq_node(expr *left, expr *right);
 
 expr *eval(expr *expression); 
 char *to_concrete(expr *expression);
