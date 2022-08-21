@@ -112,6 +112,16 @@ expr *create_doloop_node(int iterations, expr *exp)
     return doloop_exp; 
 }
 
+expr *create_break_node(void)
+{
+    expr *break_exp = malloc(sizeof(BREAK_t));
+    BREAK_t break_t;
+    break_t.type = BREAK; 
+    break_exp->breakt = break_t; 
+    return break_exp; 
+
+}
+
 expr *create_if_node(expr *cond, expr *body)
 {
     expr *if_exp = malloc(sizeof(IF_S));
@@ -280,6 +290,10 @@ expr *eval(expr *expression)
     {
         return lookup(expression->varid.varidname); 
     }
+    else if (expression->breakt.type == BREAK)
+    {
+        return expression; 
+    }
     else if (expression->unop.type == UNARYOP)
     {
         expr *unop_node = create_unop_node(expression->unop.op, eval(expression->unop.exp));
@@ -303,9 +317,16 @@ expr *eval(expr *expression)
     }
     else if (expression->sequence.type == SEQUENCE)
     {
-        eval(expression->sequence.left);
-        eval(expression->sequence.right); 
-        return expression; 
+        expr *left_eval = eval(expression->sequence.left);
+        if (left_eval->breakt.type == BREAK)
+        {
+            return create_break_node();
+        }
+        expr *right_eval = eval(expression->sequence.right); 
+        // if (left_eval->breakt.type == BREAK || right_eval->breakt.type == BREAK)
+        // {
+        // }
+        return right_eval; 
     }
     else if (expression->doloop.type == DOL)
     {
@@ -338,7 +359,11 @@ expr *eval(expr *expression)
         }
         else
         {
-            eval(expression->forloop.exp);
+            expr *eval_exp = eval(expression->forloop.exp);
+            if (eval_exp->breakt.type == BREAK)
+            {
+                return expression; 
+            }
             expr *new_loop = create_forloop_node(expression->forloop.varidname, expression->forloop.start, expression->forloop.end, expression->forloop.incr, expression->forloop.exp, create_int_node(NUM, counter + incr));
             eval(new_loop); 
         }
@@ -348,7 +373,11 @@ expr *eval(expr *expression)
         char *cond = to_concrete(eval(expression->conditional.cond));
         if (strcmp(cond, "TRUE") == 0)
         {
-            eval(expression->conditional.body);
+            expr *eval_body = eval(expression->conditional.body);
+            if (eval_body->breakt.type == BREAK)
+            {
+                return create_break_node(); 
+            }
         }
         
         return expression;
@@ -359,7 +388,11 @@ expr *eval(expr *expression)
 
         if (strcmp(cond, "TRUE") == 0)
         {
-            eval(expression->whileloop.exp);
+            expr *eval_exp = eval(expression->whileloop.exp);
+            if (eval_exp->breakt.type == BREAK)
+            {
+                return expression; 
+            }
             eval(create_while_node(expression->whileloop.cond, expression->whileloop.exp));
         }
 

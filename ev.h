@@ -63,6 +63,7 @@ enum types{
     FUNCTION, 
     FORL,
     WHILEL, 
+    BREAK, 
 };
 
 typedef struct INT
@@ -154,6 +155,11 @@ typedef struct WHILELOOP
 }
 WHILELOOP; 
 
+typedef struct BREAK_t
+{
+    enum types type; 
+}
+BREAK_t;
 
 
 typedef struct PRINTI
@@ -201,6 +207,7 @@ typedef struct expr
         SEQ sequence;
         FORLOOP forloop;
         WHILELOOP whileloop;  
+        BREAK_t breakt; 
     };
 }
 expr; 
@@ -214,6 +221,7 @@ expr *create_varid_node(char *varidname);
 expr *create_binop_node(enum bops op, expr *left, expr *right);
 expr *create_unop_node(enum uops op, expr *exp); 
 expr *create_if_node(expr *cond, expr *body);
+expr *create_break_node(void);
 
 expr *create_print_node(expr *exp);
 expr *create_doloop_node(int iterations, expr *exp);

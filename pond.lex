@@ -53,6 +53,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "FALSE"  { return FALSE; }
 "print" { return PRINT; }
 "while" {return WHILE; }
+"stop"  { return STOP; }
 
 [0-9]+ { yylval.intval = atoi(yytext); return NUMBER; }
 {ID}   { strcpy(yylval.strval, yytext); return ID; }
