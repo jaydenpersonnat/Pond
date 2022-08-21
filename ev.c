@@ -191,6 +191,35 @@ expr *create_while_node(expr *cond, expr *exp)
     return while_exp; 
 }
 
+expr *create_getnum_node(char *prompt)
+{
+    expr *getnum_exp = malloc(sizeof(GETNUM_f));
+    GETNUM_f getnum;
+    getnum.type = GETNUM;
+    strcpy(getnum.prompt, prompt);
+    getnum_exp->getnum = getnum;
+    return getnum_exp; 
+}
+
+expr *create_getfloat_node(char *prompt)
+{
+    expr *getfloat_exp = malloc(sizeof(GETFLOAT_f));
+    GETFLOAT_f getfloat; 
+    getfloat.type = GETFLOAT;
+    strcpy(getfloat.prompt, prompt);
+    getfloat_exp->getfloat = getfloat; 
+    return getfloat_exp; 
+}
+
+expr *create_getstr_node(char *prompt)
+{
+    expr *getstr_exp = malloc(sizeof(GETSTR_f));
+    GETSTR_f getstr; 
+    getstr.type = GETSTR; 
+    strcpy(getstr.prompt, prompt);
+    getstr_exp->getstr = getstr;
+    return getstr_exp; 
+}
 
 expr *unopeval(UNOP u_exp)
 {
@@ -320,7 +349,7 @@ expr *eval(expr *expression)
     }
     else if (expression->print.type == PRINTING)
     {
-        printf("> %s\n", to_concrete(eval(expression->print.exp)));
+        printf("%s\n", to_concrete(eval(expression->print.exp)));
         return expression; 
     }
     else if (expression->sequence.type == SEQUENCE)
@@ -401,6 +430,31 @@ expr *eval(expr *expression)
         }
 
         return expression; 
+    }
+    else if (expression->getnum.type == GETNUM)
+    {
+        int value; 
+        printf("%s", expression->getnum.prompt);
+        scanf("%d", &value);
+        return create_int_node(NUM, value);
+
+    }
+    else if (expression->getfloat.type == GETFLOAT)
+    {
+        float value; 
+        printf("%s", expression->getfloat.prompt);
+        scanf("%f", &value);
+        return create_dec_node(DECIMAL, value);
+    }
+    else if (expression->getstr.type == GETSTR)
+    {
+        char value[MAX_STRING_SIZE];
+        printf("%s", expression->getstr.prompt);
+        fgets(value, 500, stdin);
+
+        if ((strlen(value) > 0) && (value[strlen (value) - 1] == '\n'))
+            value[strlen (value) - 1] = '\0';
+        return create_str_node(STR, value);
     }
     else if (expression->error.type == ERROR)
     {

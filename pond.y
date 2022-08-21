@@ -48,6 +48,9 @@
 %token LSQUARE RSQUARE
 %token STOP 
 %token AND OR
+%token GETINT 
+%token GETDEC 
+%token GETSTRING 
 
 %type <exp> exp
 %type <intval> NUMBER 
@@ -69,8 +72,8 @@
  
 %%
 program: 
-  exp      { eval($1); }
-;
+  exp      { eval($1); } 
+; 
  
 
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
@@ -101,18 +104,21 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | ID ASSIGN exp    { $$ = create_assign_node($1, $3);}
   | ID             {$$ = create_varid_node($1);}   
   | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
-  | STOP                  {$$ = create_break_node(); }
+  | STOP                  {$$ = create_break_node(); } 
+  | GETINT LPAR STRS RPAR {$$ = create_getnum_node($3);}
+  | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node($3); } 
+  | GETSTRING LPAR STRS RPAR {$$ = create_getstr_node($3); }
   | exp EOL              { $$ = $1; } 
   | exp EOL exp          {$$ = create_seq_node($1, $3); }
   | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}
   | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
   | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4);}
   | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}  
- ;     
-%%       
+ ;      
+%%         
         
-  
-int main(int argc, char **argv)
+   
+int main(int argc, char **argv) 
 {
     init_hash_table(); 
 
@@ -130,5 +136,5 @@ int main(int argc, char **argv)
 int yyerror(char *s)
 {
     fprintf(stderr, "error: %s\n", s); 
-    return 1;
+    return 1;  
 }

@@ -77,7 +77,10 @@
      RSQUARE = 293,
      STOP = 294,
      AND = 295,
-     OR = 296
+     OR = 296,
+     GETINT = 297,
+     GETDEC = 298,
+     GETSTRING = 299
    };
 #endif
 /* Tokens.  */
@@ -120,6 +123,9 @@
 #define STOP 294
 #define AND 295
 #define OR 296
+#define GETINT 297
+#define GETDEC 298
+#define GETSTRING 299
 
 
 
@@ -135,7 +141,7 @@ typedef union YYSTYPE
     // exprlist list; 
 }
 /* Line 1529 of yacc.c.  */
-#line 139 "pond.tab.h"
+#line 145 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -8,7 +8,7 @@
 
 #define INT_SIZE 30
 #define MAX_FLOAT_SIZE 6
-#define MAX_STRING_SIZE 500
+#define MAX_STRING_SIZE 600
 #define TABLE_SIZE 1000
 
 
@@ -66,6 +66,9 @@ enum types{
     FORL,
     WHILEL, 
     BREAK, 
+    GETNUM, 
+    GETFLOAT, 
+    GETSTR, 
 };
 
 typedef struct INT
@@ -171,6 +174,28 @@ typedef struct PRINTI
 }
 PRINTI; 
 
+typedef struct GETNUM_f
+{
+    enum types type; 
+    char prompt[MAX_STRING_SIZE];
+}
+GETNUM_f;
+
+typedef struct GETSTR_f
+{
+    enum types type;
+    char prompt[MAX_STRING_SIZE];
+}
+GETSTR_f; 
+
+
+typedef struct GETFLOAT_f
+{
+    enum types type; 
+    char prompt[MAX_STRING_SIZE];
+}
+GETFLOAT_f; 
+
 typedef struct EVALERROR
 {
     enum types type; 
@@ -210,6 +235,9 @@ typedef struct expr
         FORLOOP forloop;
         WHILELOOP whileloop;  
         BREAK_t breakt; 
+        GETNUM_f getnum; 
+        GETFLOAT_f getfloat; 
+        GETSTR_f getstr; 
     };
 }
 expr; 
@@ -235,6 +263,9 @@ char *to_concrete(expr *expression);
 expr *create_assign_node(char *varidname, expr *exp); 
 expr *create_forloop_node(char *varidname, expr *start, expr *end, expr *incr, expr *exp, expr *counter);
 expr *create_while_node(expr *cond, expr *exp);
+expr *create_getnum_node(char *prompt);
+expr *create_getfloat_node(char *prompt);
+expr *create_getstr_node(char *prompt); 
 
 
 #endif

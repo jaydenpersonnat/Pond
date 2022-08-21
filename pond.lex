@@ -56,6 +56,9 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "stop"|"break"  { return STOP; }
 "and"|"AND"  { return AND; }
 "or"|"OR" {return OR; }
+"getnum"  { return GETINT; }
+"getfloat" { return GETDEC; }
+"getstring" {return GETSTRING; }
 
 [0-9]+ { yylval.intval = atoi(yytext); return NUMBER; }
 {ID}   { strcpy(yylval.strval, yytext); return ID; }

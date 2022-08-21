@@ -1,0 +1,5 @@
+
+
+age = getstring("What's your age?");
+
+print(age);
