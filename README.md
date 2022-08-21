@@ -140,7 +140,7 @@ For loops in pond initialize a variable to a integer and then increments that in
 to a certain value. The incrementation is specified after the "incr" keyword. 
 
 ```
-for i = 1 to i = 20 incr 1
+for i = 1 to 20 incr 1
 {
     print(20); 
 }

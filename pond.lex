@@ -36,7 +36,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "["    { return LSQUARE; }
 "]"    { return RSQUARE; }
 "!"    { return FACT; }
-"=="   { return EQUALS; }
+"=="|"equals" { return EQUALS; }
 ">"    { return GREATER; }
 "<"    { return LESS; }
 ">="   { return GREATEREQUAL; }
@@ -47,13 +47,15 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "do"   { return DO; }
 "for"  { return FOR; }
 "to"   { return TO; }
-"incr" { return INCR; }
+"incr"|"add" { return INCR; }
 "not"  { return NOT; }
 "TRUE"  { return TRUE; }
 "FALSE"  { return FALSE; }
 "print" { return PRINT; }
 "while" {return WHILE; }
-"stop"  { return STOP; }
+"stop"|"break"  { return STOP; }
+"and"|"AND"  { return AND; }
+"or"|"OR" {return OR; }
 
 [0-9]+ { yylval.intval = atoi(yytext); return NUMBER; }
 {ID}   { strcpy(yylval.strval, yytext); return ID; }

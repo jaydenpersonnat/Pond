@@ -227,6 +227,10 @@ expr *binopeval(BINOP b_exp)
                 return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->integer.value);
             else if (b_exp.left->decimal.type == DECIMAL && b_exp.right->decimal.type == DECIMAL) 
                 return create_dec_node(DECIMAL, b_exp.left->decimal.value + b_exp.right->decimal.value);
+            else 
+            {
+                return create_eval_error("Incorrect types being added");
+            }
         }
         case MINUS : 
         {
@@ -276,6 +280,10 @@ expr *binopeval(BINOP b_exp)
             return create_bool_node(BOOL, b_exp.left->integer.value >= b_exp.right->integer.value? true: false);
         case LESSTHANEQUAL: 
             return create_bool_node(BOOL, b_exp.left->integer.value <= b_exp.right->integer.value? true: false);
+        case ANDOP: 
+            return create_bool_node(BOOL, b_exp.left->boolean.value && b_exp.right->boolean.value? true: false);
+        case OROP: 
+            return create_bool_node(BOOL, b_exp.left->boolean.value || b_exp.right->boolean.value? true: false);
     }
 }
 
@@ -323,14 +331,10 @@ expr *eval(expr *expression)
             return create_break_node();
         }
         expr *right_eval = eval(expression->sequence.right); 
-        // if (left_eval->breakt.type == BREAK || right_eval->breakt.type == BREAK)
-        // {
-        // }
         return right_eval; 
     }
     else if (expression->doloop.type == DOL)
     {
-        // fix do loop later
         for (int i = 0; i < expression->doloop.iterations; i++)
         {
             eval(expression->doloop.exp);
@@ -400,7 +404,7 @@ expr *eval(expr *expression)
     }
     else if (expression->error.type == ERROR)
     {
-        return expression; 
+        return expression;  
     }
     else
     {

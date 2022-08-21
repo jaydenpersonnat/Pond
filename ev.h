@@ -44,6 +44,8 @@ enum bops{
     GREATERTHAN,
     LESSTHANEQUAL,
     GREATERTHANEQUAL, 
+    ANDOP,
+    OROP, 
 };
 
 enum types{

@@ -47,6 +47,7 @@
 %token LESSEQUAL GREATEREQUAL 
 %token LSQUARE RSQUARE
 %token STOP 
+%token AND OR
 
 %type <exp> exp
 %type <intval> NUMBER 
@@ -56,7 +57,7 @@
 
 
 // figure out precedence and associativy of operators 
-%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL ASSIGN EOL 
+%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL ASSIGN EOL AND OR
 %left ADD SUB 
 %left MUL DIV MOD
 %right POW
@@ -68,9 +69,9 @@
  
 %%
 program: 
-  exp      { eval($1);}
+  exp      { eval($1); }
 ;
-
+ 
 
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
@@ -91,6 +92,8 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); } 
   | exp GREATEREQUAL exp {$$ = create_binop_node(GREATERTHANEQUAL, $1, $3);}
   | exp LESSEQUAL exp {$$ = create_binop_node(LESSTHANEQUAL, $1, $3); }
+  | exp AND exp      {$$ = create_binop_node(ANDOP, $1, $3); }
+  | exp OR exp       { $$ = create_binop_node(OROP, $1, $3); }
   | exp LESS
   | NOT exp         {$$ = create_unop_node(NOTOP, $2); }  
   | LPAR exp RPAR  {$$ = $2;} 
@@ -105,7 +108,7 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
   | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4);}
   | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}  
- ;    
+ ;     
 %%       
         
   

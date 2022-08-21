@@ -75,7 +75,9 @@
      GREATEREQUAL = 291,
      LSQUARE = 292,
      RSQUARE = 293,
-     STOP = 294
+     STOP = 294,
+     AND = 295,
+     OR = 296
    };
 #endif
 /* Tokens.  */
@@ -116,6 +118,8 @@
 #define LSQUARE 292
 #define RSQUARE 293
 #define STOP 294
+#define AND 295
+#define OR 296
 
 
 
@@ -131,7 +135,7 @@ typedef union YYSTYPE
     // exprlist list; 
 }
 /* Line 1529 of yacc.c.  */
-#line 135 "pond.tab.h"
+#line 139 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
