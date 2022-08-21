@@ -200,6 +200,7 @@ expr *create_str_node(enum types type, char *val);
 expr *create_varid_node(char *varidname);
 expr *create_binop_node(enum bops op, expr *left, expr *right);
 expr *create_unop_node(enum uops op, expr *exp); 
+expr *create_if_node(expr *cond, expr *body);
 
 expr *create_print_node(expr *exp);
 expr *create_doloop_node(int iterations, expr *exp);

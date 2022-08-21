@@ -1,7 +1,9 @@
 
-
-
-for x = 5 to 10 incr 1
+x = 9; 
+do 3
 {
-    print(x);
-}
+    x = x + 4;
+    x = x + 4;
+};
+
+print(x);

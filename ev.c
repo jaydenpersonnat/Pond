@@ -112,14 +112,14 @@ expr *create_doloop_node(int iterations, expr *exp)
     return doloop_exp; 
 }
 
-// expr *create_if_node(expr *cond, expr *body)
-// {
-//     expr *if_exp = malloc(sizeof(IF_S));
-//     IF_S conditional; 
-//     conditional.type = CONDITIONAL; conditional.cond = cond; conditional.body = body;
-//     if_exp->conditional = conditional;
-//     return if_exp; 
-// }
+expr *create_if_node(expr *cond, expr *body)
+{
+    expr *if_exp = malloc(sizeof(IF_S));
+    IF_S conditional; 
+    conditional.type = CONDITIONAL; conditional.cond = cond; conditional.body = body;
+    if_exp->conditional = conditional;
+    return if_exp; 
+}
 
 expr *create_unop_node(enum uops op, expr *exp)
 {
@@ -332,21 +332,17 @@ expr *eval(expr *expression)
             expr *new_loop = create_forloop_node(expression->forloop.varidname, expression->forloop.start, expression->forloop.end, expression->forloop.incr, expression->forloop.exp, create_int_node(NUM, counter + incr));
             eval(new_loop); 
         }
-       
-        
-        // for (int i = expression->forloop.start; i <= expression->forloop.end; i = i + expression->forloop.incr)
-        // {
-        //     eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, i)));
-        //     eval(expression->forloop.exp);
-        // }
-        // eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, expression->forloop.start)));
-        // while (eval(create_varid_node(expression->forloop.varidname))->integer.value !=  expression->forloop.end)
-        // {
-        //     eval(expression->forloop.exp);
-        //     eval(create_assign_node(expression->forloop.varidname, create_binop_node(PLUS, create_varid_node(expression->forloop.varidname), create_int_node(NUM, expression->forloop.incr))));
-        // }
-        // return expression; 
 
+    }
+    else if (expression->conditional.type == CONDITIONAL)
+    {
+        char *cond = to_concrete(eval(expression->conditional.cond));
+        if (strcmp(cond, "TRUE") == 0)
+        {
+            eval(expression->conditional.body);
+        }
+        
+        return expression;
     }
     else if (expression->error.type == ERROR)
     {
