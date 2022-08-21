@@ -155,7 +155,7 @@ expr *create_seq_node(expr *left, expr *right)
     return seq_expr; 
 }
 
-expr *create_forloop_node(char *varidname,int start, int end, int incr, expr *exp)
+expr *create_forloop_node(char *varidname, expr *start, expr *end, expr *incr, expr *exp, expr *counter)
 {
     expr *forloop_expr = malloc(sizeof(FORLOOP));
     FORLOOP forloop; 
@@ -164,6 +164,7 @@ expr *create_forloop_node(char *varidname,int start, int end, int incr, expr *ex
     forloop.start = start;
     forloop.end = end; 
     forloop.incr = incr; 
+    forloop.counter = counter; 
     forloop.exp = exp; 
     forloop_expr->forloop = forloop;
     return forloop_expr; 
@@ -307,13 +308,37 @@ expr *eval(expr *expression)
     }
     else if (expression->forloop.type == FORL)
     {
-        for (int i = expression->forloop.start; i <= expression->forloop.end; i = i + expression->forloop.incr)
+        eval(create_assign_node(expression->forloop.varidname, expression->forloop.counter));
+        int start = atoi(to_concrete(eval(expression->forloop.start)));
+        int end = atoi(to_concrete(eval(expression->forloop.end)));
+        int counter = atoi(to_concrete(eval(expression->forloop.counter)));
+        int incr = atoi(to_concrete(eval(expression->forloop.incr)));
+        
+        if (end > start && incr > 0 && counter > end)
         {
-            eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, i)));
-            eval(expression->forloop.exp);
+            return expression; 
         }
-
-        return expression; 
+        else if (start > end && incr < 0 && counter < end)
+        {
+            return expression; 
+        }
+        else if (start == end || incr == 0 || (incr < 0 && start < end) || (incr > 0 && start > end))
+        {
+            return expression; 
+        }
+        else
+        {
+            eval(expression->forloop.exp);
+            expr *new_loop = create_forloop_node(expression->forloop.varidname, expression->forloop.start, expression->forloop.end, expression->forloop.incr, expression->forloop.exp, create_int_node(NUM, counter + incr));
+            eval(new_loop); 
+        }
+       
+        
+        // for (int i = expression->forloop.start; i <= expression->forloop.end; i = i + expression->forloop.incr)
+        // {
+        //     eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, i)));
+        //     eval(expression->forloop.exp);
+        // }
         // eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, expression->forloop.start)));
         // while (eval(create_varid_node(expression->forloop.varidname))->integer.value !=  expression->forloop.end)
         // {

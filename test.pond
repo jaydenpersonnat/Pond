@@ -1,9 +1,7 @@
 
 
 
-
-for i = 5 to 20 incr 1
+for x = 5 to 10 incr 1
 {
-    print(i);
-};
-
+    print(x);
+}

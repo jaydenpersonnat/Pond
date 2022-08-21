@@ -670,7 +670,7 @@ int main(void)
 
     expr *assign = create_assign_node("x", create_int_node(NUM, 0));
     eval(assign);
-    // int x = 0; 
+    // int x = 0;  
     // expr *doloop = create_doloop_node(3, create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5))));
 
     eval(create_doloop_node(2, create_assign_node("x", create_binop_node(PLUS, create_varid_node("x"), create_int_node(NUM, 5)))));

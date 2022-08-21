@@ -67,15 +67,15 @@
 %%
 program: 
   exp      { eval($1);}
- | FOR ID ASSIGN NUMBER TO ID ASSIGN NUMBER INCR NUMBER LBRACK exp RBRACK
-                {
-                    for (int i = $4; i <= $8; i = i + $10)
-                    {
-                        eval($12);
-                    }
-                }
+//  | FOR ID ASSIGN NUMBER TO ID ASSIGN NUMBER INCR NUMBER LBRACK exp RBRACK
+//                 {
+//                     for (int i = $4; i <= $8; i = i + $10)
+//                     {
+//                         eval($12);
+//                     }
+//                 }
 
- | 
+//  | 
 ;
 
 
@@ -108,11 +108,11 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | exp EOL              { $$ = $1; } 
   | exp EOL exp          {$$ = create_seq_node($1, $3); }
   | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}
-  | FOR ID ASSIGN NUMBER TO NUMBER INCR NUMBER LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10); }
+  | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
  ;   
-%%   
-   
-
+%%     
+     
+  
 int main(int argc, char **argv)
 {
     init_hash_table(); 

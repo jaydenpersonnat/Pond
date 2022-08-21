@@ -162,9 +162,10 @@ typedef struct FORLOOP
 {
     enum types type; 
     char varidname[MAX_STRING_SIZE];
-    int start;
-    int end; 
-    int incr;
+    struct expr *start;
+    struct expr *end; 
+    struct expr *incr;
+    struct expr *counter; 
     struct expr *exp; 
 }
 FORLOOP;
@@ -208,7 +209,7 @@ expr *create_seq_node(expr *left, expr *right);
 expr *eval(expr *expression); 
 char *to_concrete(expr *expression);
 expr *create_assign_node(char *varidname, expr *exp); 
-expr *create_forloop_node(char *varidname, int start, int end, int incr, expr *exp);
+expr *create_forloop_node(char *varidname, expr *start, expr *end, expr *incr, expr *exp, expr *counter);
 
 
 #endif
