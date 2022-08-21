@@ -1,8 +1,9 @@
 
-x = 3;
 
-do 4
+x = 100;
+
+while x > 20
 {
-    x = x + 2;
-};
-print(x);
+    print(x);
+    x = x - 2;
+}

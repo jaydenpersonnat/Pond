@@ -20,6 +20,8 @@ struct ASSIGNM;
 struct IF_S; 
 struct PRINTI; 
 struct FORLOOP;
+struct WHILELOOP;
+struct DOLOOP; 
 
 
 enum uops{
@@ -60,7 +62,7 @@ enum types{
     SEQUENCE, 
     FUNCTION, 
     FORL,
-    // WHILE, 
+    WHILEL, 
 };
 
 typedef struct INT
@@ -144,6 +146,16 @@ typedef struct DOLOOP
 }
 DOLOOP; 
 
+typedef struct WHILELOOP
+{
+    enum types type;
+    struct expr *cond; 
+    struct expr *exp; 
+}
+WHILELOOP; 
+
+
+
 typedef struct PRINTI
 {
     enum types type; 
@@ -187,7 +199,8 @@ typedef struct expr
         DOLOOP doloop; 
         EVALERROR error; 
         SEQ sequence;
-        FORLOOP forloop;  
+        FORLOOP forloop;
+        WHILELOOP whileloop;  
     };
 }
 expr; 
@@ -211,6 +224,7 @@ expr *eval(expr *expression);
 char *to_concrete(expr *expression);
 expr *create_assign_node(char *varidname, expr *exp); 
 expr *create_forloop_node(char *varidname, expr *start, expr *end, expr *incr, expr *exp, expr *counter);
+expr *create_while_node(expr *cond, expr *exp);
 
 
 #endif

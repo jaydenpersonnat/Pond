@@ -170,6 +170,17 @@ expr *create_forloop_node(char *varidname, expr *start, expr *end, expr *incr, e
     return forloop_expr; 
 }
 
+expr *create_while_node(expr *cond, expr *exp)
+{
+    expr *while_exp = malloc(sizeof(WHILELOOP));
+    WHILELOOP whileloop; 
+    whileloop.type = WHILEL; 
+    whileloop.cond = cond;
+    whileloop.exp = exp; 
+    while_exp->whileloop = whileloop; 
+    return while_exp; 
+}
+
 
 expr *unopeval(UNOP u_exp)
 {
@@ -331,7 +342,6 @@ expr *eval(expr *expression)
             expr *new_loop = create_forloop_node(expression->forloop.varidname, expression->forloop.start, expression->forloop.end, expression->forloop.incr, expression->forloop.exp, create_int_node(NUM, counter + incr));
             eval(new_loop); 
         }
-
     }
     else if (expression->conditional.type == CONDITIONAL)
     {
@@ -343,15 +353,22 @@ expr *eval(expr *expression)
         
         return expression;
     }
+    else if (expression->whileloop.type == WHILEL)
+    {
+        char *cond = to_concrete(eval(expression->whileloop.cond));
+
+        if (strcmp(cond, "TRUE") == 0)
+        {
+            eval(expression->whileloop.exp);
+            eval(create_while_node(expression->whileloop.cond, expression->whileloop.exp));
+        }
+
+        return expression; 
+    }
     else if (expression->error.type == ERROR)
     {
         return expression; 
     }
-    // else if (expression->forloop.type == FOR)
-    // {
-    //     // create_assign_node(node,)
-    // }
-    
     else
     {
         return expression;
