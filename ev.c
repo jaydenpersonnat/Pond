@@ -271,14 +271,13 @@ expr *eval(expr *expression)
     }
     else if (expression->unop.type == UNARYOP)
     {
-        expression->unop.exp = eval(expression->unop.exp);
-        return unopeval(expression->unop); 
+        expr *unop_node = create_unop_node(expression->unop.op, eval(expression->unop.exp));
+        return unopeval(unop_node->unop); 
     }
     else if (expression->binop.type == BINARYOP)
     {
-        expression->binop.left = eval(expression->binop.left);
-        expression->binop.right  = eval(expression->binop.right);
-        return binopeval(expression->binop);
+        expr *new_binop = create_binop_node(expression->binop.op, eval(expression->binop.left), eval(expression->binop.right));
+        return binopeval(new_binop->binop);
     }
     else if (expression->assign.type == ASSIGNMENT)
     {

@@ -102,8 +102,8 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
   | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4);}
  ;   
-%%     
-     
+%%      
+       
   
 int main(int argc, char **argv)
 {

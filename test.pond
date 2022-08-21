@@ -1,9 +1,9 @@
 
-x = 9; 
-do 3
-{
-    x = x + 4;
-    x = x + 4;
-};
 
-print(x);
+for i = 1 to 30 incr 1
+{
+    if i % 5 == 0
+    {
+        print(i);
+    }
+}
