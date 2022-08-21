@@ -109,7 +109,7 @@ int main(int argc, char **argv)
 {
     init_hash_table(); 
 
-    yyin = fopen(argv[1], "r");
+    yyin = fopen(argv[1], "r"); 
 
     if (!yyin)
     {

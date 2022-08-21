@@ -281,8 +281,8 @@ expr *eval(expr *expression)
     }
     else if (expression->assign.type == ASSIGNMENT)
     {
-        expression->assign.exp =  eval(expression->assign.exp);
-        insert(expression->assign.varidname, expression->assign.exp); 
+        // expression->assign.exp =  eval(expression->assign.exp);
+        insert(expression->assign.varidname, eval(expression->assign.exp)); 
         return expression; 
     }
     else if (expression->print.type == PRINTING)

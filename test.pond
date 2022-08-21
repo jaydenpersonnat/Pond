@@ -1,9 +1,8 @@
 
+x = 3;
 
-for i = 1 to 30 incr 1
+do 4
 {
-    if i % 5 == 0
-    {
-        print(i);
-    }
-}
+    x = x + 2;
+};
+print(x);
