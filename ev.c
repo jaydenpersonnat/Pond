@@ -361,6 +361,12 @@ expr *binopeval(BINOP b_exp)
             expr_node *head = b_exp.left->explist.list;
             expr_node *ptr1 = b_exp.left->explist.list; 
             expr_node *ptr2 = b_exp.right->explist.list; 
+
+            if (ptr1 == NULL)
+            {
+                return create_list_node(ptr2);
+            }
+            
             while (ptr1->next != NULL)
             {
                 ptr1 = ptr1->next; 
@@ -428,7 +434,6 @@ expr *eval(expr *expression)
     }
     else if (expression->assign.type == ASSIGNMENT)
     {
-        // expression->assign.exp =  eval(expression->assign.exp);
         insert(expression->assign.varidname, eval(expression->assign.exp)); 
         return expression; 
     }
@@ -455,7 +460,15 @@ expr *eval(expr *expression)
     {
         for (int i = 0; i < expression->doloop.iterations; i++)
         {
-            eval(expression->doloop.exp);
+            expr *eval_exp = eval(expression->doloop.exp);
+            if (eval_exp->breakt.type == BREAK)
+            {
+                return expression; 
+            }
+            if (eval_exp->return_t.type == RETURN_t)
+            {
+                return eval_exp; 
+            }
         }
         return expression; 
     }
@@ -486,6 +499,11 @@ expr *eval(expr *expression)
             {
                 return expression; 
             }
+            if (eval_exp->return_t.type == RETURN_t)
+            {
+                return eval_exp; 
+            }
+            
             expr *new_loop = create_forloop_node(expression->forloop.varidname, expression->forloop.start, expression->forloop.end, expression->forloop.incr, expression->forloop.exp, create_int_node(NUM, counter + incr));
             eval(new_loop); 
         }
@@ -530,6 +548,10 @@ expr *eval(expr *expression)
             if (eval_exp->breakt.type == BREAK)
             {
                 return expression; 
+            }
+            if (eval_exp->return_t.type == RETURN_t)
+            {
+                return eval_exp; 
             }
             eval(create_while_node(expression->whileloop.cond, expression->whileloop.exp));
         }

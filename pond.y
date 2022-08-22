@@ -60,29 +60,34 @@
  
 %type <varlist> varidlist
 %type <list> explist
-%type <exp> exp  
+%type <exp> exp binop unop
 %type <intval> NUMBER 
 %type <strval> ID STRS 
 %type <fval> FLOAT 
 
 
 // figure out precedence and associativy of operators 
-%left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL ASSIGN EOL AND OR
-%left ADD SUB 
-%left MUL DIV MOD
-%right POW
- 
-%nonassoc NOT  
-%nonassoc ABS 
-%nonassoc FACT
+
+%left EOL
+%right ASSIGN
+%left OR 
+%left AND 
+%right NOT 
+%left EQUALS NOTEQUAL 
+%left LESS GREATER LESSEQUAL GREATEREQUAL
+%nonassoc ABS  
+%left ADD SUB CONCAT LISTCONCAT 
+%left MUL DIV MOD 
+%nonassoc FACT 
+%right POW 
+%nonassoc LBRACK RBRACK LPAR RPAR 
+
  
   
-%% 
+%%  
 program: 
   exp      { eval($1); } 
 ; 
- 
-
  
 varidlist: ID COMMA varidlist { $$ = cons_var($1, $3); }
            | ID               { $$ = cons_var($1, NULL); }
@@ -91,19 +96,19 @@ explist: exp COMMA explist { $$ = cons($1, $3)}
         | exp             { $$ = cons($1, NULL); } 
 ; 
 
-exp: NUMBER        { $$ = create_int_node(NUM, $1); }
-  | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
-  | TRUE          { $$ = create_bool_node(BOOL, true);}
-  | FALSE         { $$ = create_bool_node(BOOL, false);}
-  | STRS          { $$ = create_str_node(STR, remove_double_quotes($1)); }
-  | exp ADD exp { $$ = create_binop_node(PLUS, $1, $3); }
+unop: 
+    exp FACT       {$$ = create_unop_node(FACTORIAL, $1); }
+    | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); } 
+    | NOT exp        {$$ = create_unop_node(NOTOP, $2); }
+    | ABS exp ABS       {$$ = create_unop_node(ABSV, $2); }
+
+binop: 
+   exp ADD exp { $$ = create_binop_node(PLUS, $1, $3); }
   | exp SUB exp { $$ = create_binop_node(MINUS, $1, $3); }
   | exp MUL exp    {$$ = create_binop_node(TIMES, $1, $3); }
   | exp DIV exp    {$$ = create_binop_node(DIVIDE, $1, $3); }
   | exp MOD exp    {$$ = create_binop_node(MODULO, $1, $3);}
-  | ABS exp ABS       {$$ = create_unop_node(ABSV, $2); }
   | exp POW exp    {$$ = create_binop_node(POWER, $1, $3);}
-  | exp FACT       {$$ = create_unop_node(FACTORIAL, $1); }
   | exp EQUALS exp {$$ = create_binop_node(EQUALTO, $1, $3); }
   | exp NOTEQUAL exp {$$ = create_binop_node(NOTEQUALTO, $1, $3); }
   | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); } 
@@ -114,14 +119,24 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | exp OR exp       { $$ = create_binop_node(OROP, $1, $3); }
   | exp CONCAT exp   { $$ = create_binop_node(SJOIN, $1, $3); } 
   | exp LISTCONCAT exp {$$ = create_binop_node(LJOIN, $1, $3); } 
+
+
+
+
+exp: NUMBER        { $$ = create_int_node(NUM, $1); }
+  | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
+  | TRUE          { $$ = create_bool_node(BOOL, true);}
+  | FALSE         { $$ = create_bool_node(BOOL, false);}
+  | STRS          { $$ = create_str_node(STR, remove_double_quotes($1)); }
+  | binop
+  | unop 
   | LPAR exp RPAR  {$$ = $2;} 
-  | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); } 
   | ID ASSIGN exp    { $$ = create_assign_node($1, $3);} 
   | ID             {$$ = create_varid_node($1);}   
   | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
   | STOP                  {$$ = create_break_node(); }  
   | GETINT LPAR STRS RPAR {$$ = create_getnum_node(remove_double_quotes($3));}
-  | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node(remove_double_quotes($3)); } 
+  | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node(remove_double_quotes($3)); }  
   | GETSTRING LPAR STRS RPAR {$$ = create_getstr_node(remove_double_quotes($3)); }
   | exp EOL              { $$ = $1; } 
   | exp EOL exp          {$$ = create_seq_node($1, $3); } 
@@ -131,14 +146,14 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | IF exp LBRACK exp RBRACK   { $$ = create_if_node($2, $4, create_int_node(NUM, 0));}
   | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}   
   | LSQUARE explist RSQUARE       { $$ = create_list_node($2); }
+  | LSQUARE RSQUARE               {$$ = create_list_node(NULL); }
   | ID LPAR varidlist RPAR LBRACK exp RBRACK {$$ = create_func_node($1, $3, $6); }
   | ID LPAR explist RPAR            {$$ = create_app_node($1, $3); }
   | OUTPUT exp                         {$$ = create_return_node($2); }
-  | LBRACK exp RBRACK                  {$$ = $2; } 
   | exp LBRACK exp RBRACK           {$$ = create_binop_node(INDEX, $3, $1);}  
-
- ;       
-%%            
+  | LBRACK exp RBRACK                  {$$ = $2; } 
+ ;        
+%%              
                
     
 int main(int argc, char **argv) 

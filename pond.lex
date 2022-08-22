@@ -18,9 +18,9 @@ alnum 		{alpha}|{digit}
 
 ID 			[a-zA-Z][a-zA-Z0-9_]*
 DECIMAL     "0"|{digit}*"."{digit}+
-STRING      \"(([^\"]|\\n)*)\"
-
+STRING      \"([^\"\\\n]|\\.|\\\n)*\"
 %%
+
 "+"    { return ADD; }
 "-"    { return SUB; }
 "*"    { return MUL; }
