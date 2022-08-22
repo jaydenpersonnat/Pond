@@ -21,7 +21,7 @@ DECIMAL     "0"|{digit}*"."{digit}+
 STRING      \"([^\"\\\n]|\\.|\\\n)*\"
 %%
 
-"+"    { return ADD; }
+"+"    { return ADD; } 
 "-"    { return SUB; }
 "*"    { return MUL; }
 "/"    { return DIV; }
