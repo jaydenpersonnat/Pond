@@ -36,6 +36,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "["    { return LSQUARE; }
 "]"    { return RSQUARE; }
 "!"    { return FACT; }
+","    { return COMMA; }
 "=="|"equals" { return EQUALS; }
 ">"    { return GREATER; }
 "<"    { return LESS; }

@@ -80,7 +80,8 @@
      OR = 296,
      GETINT = 297,
      GETDEC = 298,
-     GETSTRING = 299
+     GETSTRING = 299,
+     COMMA = 300
    };
 #endif
 /* Tokens.  */
@@ -126,6 +127,7 @@
 #define GETINT 297
 #define GETDEC 298
 #define GETSTRING 299
+#define COMMA 300
 
 
 
@@ -138,10 +140,10 @@ typedef union YYSTYPE
     double fval; 
     char strval[60]; 
     expr *exp; 
-    // exprlist list; 
+    exprlist *list; 
 }
 /* Line 1529 of yacc.c.  */
-#line 145 "pond.tab.h"
+#line 147 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -18,7 +18,7 @@
     double fval; 
     char strval[60]; 
     expr *exp; 
-    // exprlist list; 
+    exprlist *list; 
 }
 
 %token NUMBER 
@@ -51,8 +51,10 @@
 %token GETINT 
 %token GETDEC 
 %token GETSTRING 
+%token COMMA
 
-%type <exp> exp
+// %type <exprlist *> explist
+%type <exp> exp explist
 %type <intval> NUMBER 
 %type <strval> ID STRS
 %type <fval> FLOAT 
@@ -69,12 +71,16 @@
 %nonassoc ABS 
 %nonassoc FACT
  
- 
-%%
+  
+%% 
 program: 
   exp      { eval($1); } 
 ; 
  
+
+explist: exp COMMA explist { expr_node *ptr = malloc(sizeof(expr_node)); ptr = &($3->explist);cons($1, ptr)}
+        | exp             {cons($1, NULL); } 
+;
 
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
@@ -114,10 +120,11 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
   | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4);}
   | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}  
+  | LSQUARE explist RSQUARE       { $$ = $2; }
  ;      
 %%         
-        
-   
+         
+    
 int main(int argc, char **argv) 
 {
     init_hash_table(); 

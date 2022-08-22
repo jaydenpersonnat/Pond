@@ -22,7 +22,8 @@ struct PRINTI;
 struct FORLOOP;
 struct WHILELOOP;
 struct DOLOOP; 
-
+struct expr_node;
+struct exprlist;
 
 enum uops{
     ABSV,
@@ -69,6 +70,7 @@ enum types{
     GETNUM, 
     GETFLOAT, 
     GETSTR, 
+    EXPLIST, 
 };
 
 typedef struct INT
@@ -215,6 +217,24 @@ typedef struct FORLOOP
 }
 FORLOOP;
 
+typedef struct expr_node
+{
+    // int index; 
+    enum types type; 
+    struct expr *node; 
+    struct expr_node *next; 
+}
+expr_node; 
+
+typedef struct exprlist
+{
+    enum types type; 
+    struct expr_node *head; 
+    struct expr_node *tail; 
+    int length; 
+}
+exprlist; 
+
 
 typedef struct expr
 {
@@ -238,6 +258,7 @@ typedef struct expr
         GETNUM_f getnum; 
         GETFLOAT_f getfloat; 
         GETSTR_f getstr; 
+        expr_node explist; 
     };
 }
 expr; 
@@ -266,6 +287,7 @@ expr *create_while_node(expr *cond, expr *exp);
 expr *create_getnum_node(char *prompt);
 expr *create_getfloat_node(char *prompt);
 expr *create_getstr_node(char *prompt); 
+expr *cons(expr *exp, expr_node *list);
 
 
 #endif

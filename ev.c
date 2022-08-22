@@ -73,6 +73,42 @@ expr *create_eval_error(char *msg)
     return eval_error_exp; 
 }
 
+expr *cons(expr *exp, expr_node *list)
+{
+    expr *list_exp = malloc(sizeof(expr_node)); 
+    expr_node element; 
+    element.next = list;
+    element.node = exp;
+    list_exp->explist = element; 
+
+    return list_exp; 
+
+    // expr *list_exp = malloc(sizeof(exprlist));
+    // exprlist explist;
+    // expr_node *new_node = malloc(sizeof(expr_node)); 
+    // new_node->next = NULL; 
+    // new_node->node = exp; 
+
+    // if (list == NULL)
+    // {
+    //     new_node->index = 0;
+    //     explist.type = EXPLIST;
+    //     explist.head = new_node;
+    //     explist.tail = new_node; 
+    //     explist.length = 1; 
+    //     list_exp->explist = explist;
+
+    //     return list_exp; 
+    // }
+    // else
+    // {
+    //     list->tail->next = new_node;
+    //     list->tail = new_node; 
+    //     list->length = list->length++; 
+    //     list_exp->explist = *list; 
+    //     return list_exp; 
+    // }
+}
 // expr *append_expr_lst(expr *exp, exprlist *list)
 // {
 //     expr *list_exp = malloc(sizeof(exprlist)); 
@@ -456,6 +492,19 @@ expr *eval(expr *expression)
             value[strlen (value) - 1] = '\0';
         return create_str_node(STR, value);
     }
+    else if (expression->explist.type == EXPLIST)
+    {
+        expr_node *ptr = malloc(sizeof(expr_node));
+        ptr = &(expression->explist); 
+        while (ptr != NULL)
+        {
+            ptr->node = eval(ptr->node);
+            ptr = ptr->next; 
+        }
+
+        return expression; 
+
+    }
     else if (expression->error.type == ERROR)
     {
         return expression;  
@@ -504,6 +553,19 @@ char *to_concrete(expr *expression)
     else if (expression->error.type == ERROR)
     {
         strcpy(buffer, expression->error.msg);
+        return buffer; 
+    }
+    else if (expression->explist.type == EXPLIST)
+    {
+        // char string_list[MAX_STRING_SIZE];
+        // expr_node *cursor = expression->explist; 
+        // while (cursor != NULL)
+        // {
+        //     strcat(buffer, "world");
+        //     cursor = cursor->next; 
+        // }
+        strcpy(buffer, "test"); 
+
         return buffer; 
     }
     else
