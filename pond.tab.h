@@ -83,7 +83,9 @@
      GETSTRING = 299,
      COMMA = 300,
      OUTPUT = 301,
-     ELSE = 302
+     ELSE = 302,
+     CONCAT = 303,
+     LISTCONCAT = 304
    };
 #endif
 /* Tokens.  */
@@ -132,6 +134,8 @@
 #define COMMA 300
 #define OUTPUT 301
 #define ELSE 302
+#define CONCAT 303
+#define LISTCONCAT 304
 
 
 
@@ -148,7 +152,7 @@ typedef union YYSTYPE
     varid_node *varlist; 
 }
 /* Line 1529 of yacc.c.  */
-#line 152 "pond.tab.h"
+#line 156 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

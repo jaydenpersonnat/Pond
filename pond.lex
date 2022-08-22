@@ -7,19 +7,18 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
-   #include <strings.h>
+    #include <strings.h>
 
 %}
 
 
 %x ML_COMMENT
-alpha 		[a-zA-Z]
 digit 		[0-9]
 alnum 		{alpha}|{digit}
 
-ID 			{alpha}+{alnum}*
+ID 			[a-zA-Z][a-zA-Z0-9_]*
 DECIMAL     "0"|{digit}*"."{digit}+
-STRING      ["]([^"\\\n]|\\.|\\\n)*["]
+STRING      \"(([^\"]|\\n)*)\"
 
 %%
 "+"    { return ADD; }
@@ -62,6 +61,8 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "getfloat" { return GETDEC; }
 "getstring" {return GETSTRING; }
 "output"|"return" {return OUTPUT; }
+"sjoin"|"&"    { return CONCAT; }
+"ljoin"|"@"    { return LISTCONCAT; }
 
 [0-9]+ { yylval.intval = atoi(yytext); return NUMBER; }
 {ID}   { strcpy(yylval.strval, yytext); return ID; }

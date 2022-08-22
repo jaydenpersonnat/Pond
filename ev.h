@@ -49,6 +49,8 @@ enum bops{
     GREATERTHANEQUAL, 
     ANDOP,
     OROP, 
+    SJOIN, 
+    LJOIN, 
 };
 
 enum types{
@@ -156,7 +158,7 @@ typedef struct DOLOOP
     enum types type; 
     int iterations; 
     struct expr *exp;
-}
+} 
 DOLOOP; 
 
 typedef struct WHILELOOP

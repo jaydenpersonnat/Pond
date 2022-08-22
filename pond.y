@@ -52,17 +52,18 @@
 %token GETINT 
 %token GETDEC 
 %token GETSTRING 
-%token COMMA
+%token COMMA 
 %token OUTPUT
-%token ELSE
-
+%token ELSE 
+%token CONCAT    
+%token LISTCONCAT; 
+ 
 %type <varlist> varidlist
 %type <list> explist
-%type <exp> exp 
+%type <exp> exp  
 %type <intval> NUMBER 
-%type <strval> ID STRS
+%type <strval> ID STRS 
 %type <fval> FLOAT 
-// %type <list> explist
 
 
 // figure out precedence and associativy of operators 
@@ -111,16 +112,17 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | exp LESSEQUAL exp {$$ = create_binop_node(LESSTHANEQUAL, $1, $3); }
   | exp AND exp      {$$ = create_binop_node(ANDOP, $1, $3); }
   | exp OR exp       { $$ = create_binop_node(OROP, $1, $3); }
-  | NOT exp         {$$ = create_unop_node(NOTOP, $2); }   
+  | exp CONCAT exp   { $$ = create_binop_node(SJOIN, $1, $3); } 
+  | exp LISTCONCAT exp {$$ = create_binop_node(LJOIN, $1, $3); } 
   | LPAR exp RPAR  {$$ = $2;} 
-  | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
-  | ID ASSIGN exp    { $$ = create_assign_node($1, $3);}
+  | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); } 
+  | ID ASSIGN exp    { $$ = create_assign_node($1, $3);} 
   | ID             {$$ = create_varid_node($1);}   
   | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
   | STOP                  {$$ = create_break_node(); }  
   | GETINT LPAR STRS RPAR {$$ = create_getnum_node(remove_double_quotes($3));}
-  | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node($3); } 
-  | GETSTRING LPAR STRS RPAR {$$ = create_getstr_node($3); }
+  | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node(remove_double_quotes($3)); } 
+  | GETSTRING LPAR STRS RPAR {$$ = create_getstr_node(remove_double_quotes($3)); }
   | exp EOL              { $$ = $1; } 
   | exp EOL exp          {$$ = create_seq_node($1, $3); } 
   | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}

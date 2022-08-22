@@ -354,6 +354,20 @@ expr *binopeval(BINOP b_exp)
             return create_bool_node(BOOL, b_exp.left->boolean.value && b_exp.right->boolean.value? true: false);
         case OROP: 
             return create_bool_node(BOOL, b_exp.left->boolean.value || b_exp.right->boolean.value? true: false);
+        case SJOIN:
+            return create_str_node(STR, (strcat(b_exp.left->string.value, b_exp.right->string.value)));
+        case LJOIN:
+        {
+            expr_node *head = b_exp.left->explist.list;
+            expr_node *ptr1 = b_exp.left->explist.list; 
+            expr_node *ptr2 = b_exp.right->explist.list; 
+            while (ptr1->next != NULL)
+            {
+                ptr1 = ptr1->next; 
+            }
+            ptr1->next = ptr2; 
+            return create_list_node(head); 
+        }
     }
 }
 
@@ -515,13 +529,18 @@ expr *eval(expr *expression)
     }
     else if (expression->getstr.type == GETSTR)
     {
-        char value[MAX_STRING_SIZE];
+        char value[MAX_STRING_SIZE]; 
         printf("%s", expression->getstr.prompt);
-        fgets(value, 500, stdin);
-
-        if ((strlen(value) > 0) && (value[strlen (value) - 1] == '\n'))
-            value[strlen (value) - 1] = '\0';
+        scanf("%s", value);
         return create_str_node(STR, value);
+        // char value[MAX_STRING_SIZE];
+        // printf("%s", expression->getstr.prompt);
+        // fgets(value, 500, stdin);
+
+        // if ((strlen(value) > 0) && (value[strlen (value) - 1] == '\n'))
+        //     value[strlen (value) - 1] = '\0';
+
+        // return create_str_node(STR, value);
     }
     else if (expression->explist.type == EXPLIST)
     {
