@@ -45,6 +45,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "="    { return ASSIGN; }
 "!="   { return NOTEQUAL; }
 "if"   { return IF; }
+"else" { return ELSE; }
 "do"   { return DO; }
 "for"  { return FOR; }
 "to"   { return TO; }

@@ -54,6 +54,7 @@
 %token GETSTRING 
 %token COMMA
 %token OUTPUT
+%token ELSE
 
 %type <varlist> varidlist
 %type <list> explist
@@ -121,15 +122,27 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node($3); } 
   | GETSTRING LPAR STRS RPAR {$$ = create_getstr_node($3); }
   | exp EOL              { $$ = $1; } 
-  | exp EOL exp          {$$ = create_seq_node($1, $3); }
+  | exp EOL exp          {$$ = create_seq_node($1, $3); } 
   | DO NUMBER LBRACK exp RBRACK { $$ = create_doloop_node($2, $4);}
   | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
-  | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4);}
+  | IF exp LBRACK exp RBRACK ELSE exp {$$ = create_if_node($2, $4, $7);}
+  | IF exp LBRACK exp RBRACK   { $$ = create_if_node($2, $4, create_int_node(NUM, 0));}
   | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}  
   | LSQUARE explist RSQUARE       { $$ = create_list_node($2); }
   | ID LPAR varidlist RPAR LBRACK exp RBRACK {$$ = create_func_node($1, $3, $6); }
   | ID LPAR explist RPAR            {$$ = create_app_node($1, $3); }
   | OUTPUT exp                         {$$ = create_return_node($2); }
+  | LBRACK exp RBRACK                  {$$ = $2; }
+//   | exp LBRACK NUMBER RBRACK          {   
+//                                             int counter = 0;
+//                                             expr_node *ptr = $1->explist.list; 
+//                                             while (counter != $3)
+//                                             {
+//                                                 ptr = ptr->next;
+//                                                 counter++; 
+//                                             }
+//                                             $$ = ptr->node; 
+//                                        }
  ;       
 %%            
                

@@ -10,7 +10,6 @@
 
 char *to_concrete(expr *expression);
 expr *eval(expr *expression);
-// char *list_to_string(expr_node *n);
 
 
 char buffer[MAX_STRING_SIZE];
@@ -87,6 +86,8 @@ expr_node *cons(expr *exp, expr_node *list)
 expr *create_list_node(expr_node *list)
 {
     expr *list_exp = malloc(sizeof(exprlist));
+    expr_node *ptr = list; 
+
     exprlist explist;
     explist.type = EXPLIST; 
     explist.list = list; 
@@ -139,11 +140,12 @@ expr *create_break_node(void)
 
 }
 
-expr *create_if_node(expr *cond, expr *body)
+expr *create_if_node(expr *cond, expr *body, expr *else_c)
 {
     expr *if_exp = malloc(sizeof(IF_S));
     IF_S conditional; 
     conditional.type = CONDITIONAL; conditional.cond = cond; conditional.body = body;
+    conditional.else_c = else_c; 
     if_exp->conditional = conditional;
     return if_exp; 
 }
@@ -465,6 +467,18 @@ expr *eval(expr *expression)
                 return eval_body; 
             }
         }
+        else
+        {
+            expr *eval_else = eval(expression->conditional.else_c);
+            if (eval_else->breakt.type == BREAK)
+            {
+                return create_break_node(); 
+            }
+            if (eval_else->return_t.type == RETURN_t)
+            {
+                return eval_else; 
+            }
+        }
         
         return expression;
     }
@@ -628,7 +642,6 @@ char *to_concrete(expr *expression)
 
 char *remove_double_quotes(char *input)
 {
-    // input[strlen(input) - 1] = '\0';
     char *tmp = malloc(strlen(input) + 1); 
     strcpy(tmp, input);
     tmp[strlen(tmp) - 1] = '\0';

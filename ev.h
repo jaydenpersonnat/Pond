@@ -147,6 +147,7 @@ typedef struct IF_S
     enum types type; 
     struct expr *cond; 
     struct expr *body; 
+    struct expr *else_c; 
 }
 IF_S; 
 
@@ -234,6 +235,7 @@ typedef struct expr_node
     enum types type; 
     struct expr *node; 
     struct expr_node *next; 
+    int index; 
 }
 expr_node; 
 
@@ -306,7 +308,7 @@ expr *create_str_node(enum types type, char *val);
 expr *create_varid_node(char *varidname);
 expr *create_binop_node(enum bops op, expr *left, expr *right);
 expr *create_unop_node(enum uops op, expr *exp); 
-expr *create_if_node(expr *cond, expr *body);
+expr *create_if_node(expr *cond, expr *body, expr *else_c);
 expr *create_break_node(void);
 
 expr *create_print_node(expr *exp);

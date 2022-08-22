@@ -82,7 +82,8 @@
      GETDEC = 298,
      GETSTRING = 299,
      COMMA = 300,
-     OUTPUT = 301
+     OUTPUT = 301,
+     ELSE = 302
    };
 #endif
 /* Tokens.  */
@@ -130,6 +131,7 @@
 #define GETSTRING 299
 #define COMMA 300
 #define OUTPUT 301
+#define ELSE 302
 
 
 
@@ -146,7 +148,7 @@ typedef union YYSTYPE
     varid_node *varlist; 
 }
 /* Line 1529 of yacc.c.  */
-#line 150 "pond.tab.h"
+#line 152 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
