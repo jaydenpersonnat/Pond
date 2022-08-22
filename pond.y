@@ -11,7 +11,7 @@
     int yylex();
     int yyerror(char *s);
     extern FILE *yyin;  
-%}
+%} 
 
 %union{
     int intval; 
@@ -53,6 +53,7 @@
 %token GETDEC 
 %token GETSTRING 
 %token COMMA
+%token OUTPUT
 
 %type <varlist> varidlist
 %type <list> explist
@@ -128,6 +129,7 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | LSQUARE explist RSQUARE       { $$ = create_list_node($2); }
   | ID LPAR varidlist RPAR LBRACK exp RBRACK {$$ = create_func_node($1, $3, $6); }
   | ID LPAR explist RPAR            {$$ = create_app_node($1, $3); }
+  | OUTPUT exp                         {$$ = create_return_node($2); }
 
 
  ;       

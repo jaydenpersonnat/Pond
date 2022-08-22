@@ -26,7 +26,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "-"    { return SUB; }
 "*"    { return MUL; }
 "/"    { return DIV; }
-"%"    { return MOD; }
+"%"|"mod"    { return MOD; }
 "|"    { return ABS; }
 "^"    { return POW; }
 "("    { return LPAR; }
@@ -60,6 +60,7 @@ STRING      ["]([^"\\\n]|\\.|\\\n)*["]
 "getnum"  { return GETINT; }
 "getfloat" { return GETDEC; }
 "getstring" {return GETSTRING; }
+"output"|"return" {return OUTPUT; }
 
 [0-9]+ { yylval.intval = atoi(yytext); return NUMBER; }
 {ID}   { strcpy(yylval.strval, yytext); return ID; }

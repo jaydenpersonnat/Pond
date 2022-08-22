@@ -107,6 +107,17 @@ expr *create_app_node(char *name, expr_node *list)
     return app_exp; 
 }
 
+expr *create_return_node(expr *exp)
+{
+    expr *return_exp = malloc(sizeof(RETURN));
+    RETURN return_t; 
+    return_t.type = RETURN_t;
+    return_t.exp = exp; 
+    return_exp->return_t = return_t;
+
+    return return_exp; 
+}
+
 expr *create_doloop_node(int iterations, expr *exp)
 {
     expr *doloop_exp = malloc(sizeof(DOLOOP)); 
@@ -359,6 +370,12 @@ expr *eval(expr *expression)
     {
         return expression; 
     }
+    else if (expression->return_t.type == RETURN_t)
+    {
+        expr *return_exp = create_return_node(eval(expression->return_t.exp));
+        return return_exp; 
+
+    }
     else if (expression->unop.type == UNARYOP)
     {
         expr *unop_node = create_unop_node(expression->unop.op, eval(expression->unop.exp));
@@ -386,6 +403,10 @@ expr *eval(expr *expression)
         if (left_eval->breakt.type == BREAK)
         {
             return create_break_node();
+        }
+        if (left_eval->return_t.type == RETURN_t)
+        {
+            return left_eval;
         }
         expr *right_eval = eval(expression->sequence.right); 
         return right_eval; 
@@ -438,6 +459,10 @@ expr *eval(expr *expression)
             if (eval_body->breakt.type == BREAK)
             {
                 return create_break_node(); 
+            }
+            if (eval_body->return_t.type == RETURN_t)
+            {
+                return eval_body; 
             }
         }
         
@@ -518,7 +543,14 @@ expr *eval(expr *expression)
             ptr2 = ptr2->next; 
         }
 
-        return eval(def->function.body);
+        expr *eval_body = eval(def->function.body);
+
+        if (eval_body->return_t.type == RETURN_t)
+        {
+            return eval(eval_body->return_t.exp);
+        }
+
+        return expression;
     }
     else if (expression->error.type == ERROR)
     {

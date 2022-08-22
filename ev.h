@@ -74,6 +74,7 @@ enum types{
     GETSTR, 
     EXPLIST, 
     FUNCAPP, 
+    RETURN_t, 
 };
 
 typedef struct INT
@@ -174,6 +175,7 @@ BREAK_t;
 typedef struct RETURN
 {
     enum types type;
+    struct expr *exp; 
     
 } RETURN; 
 
@@ -291,7 +293,7 @@ typedef struct expr
         exprlist explist; 
         FUNC function; 
         APP app; 
-
+        RETURN return_t; 
     };
 }
 expr; 
@@ -325,5 +327,7 @@ expr *create_list_node(expr_node *list);
 expr *create_func_node(char *name, varid_node *varidnames, expr *body);
 varid_node *cons_var(char *varidname, varid_node *n);
 expr *create_app_node(char *name, expr_node *list);
+expr *create_return_node(expr *exp);
+
 
 #endif
