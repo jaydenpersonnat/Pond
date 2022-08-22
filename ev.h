@@ -328,6 +328,7 @@ expr *create_func_node(char *name, varid_node *varidnames, expr *body);
 varid_node *cons_var(char *varidname, varid_node *n);
 expr *create_app_node(char *name, expr_node *list);
 expr *create_return_node(expr *exp);
+char *remove_double_quotes(char *input);
 
 
 #endif

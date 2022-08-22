@@ -13,7 +13,7 @@ expr *eval(expr *expression);
 // char *list_to_string(expr_node *n);
 
 
-char buffer[INT_SIZE];
+char buffer[MAX_STRING_SIZE];
 
 expr *create_int_node(enum types type, int val)
 {
@@ -528,7 +528,6 @@ expr *eval(expr *expression)
     {
         insert(expression->function.name, expression);
         return expression; 
-        // return create_assign_node()
     }
     else if (expression->app.type == FUNCAPP)
     {
@@ -627,20 +626,14 @@ char *to_concrete(expr *expression)
     } 
 }
 
-// char *list_to_string(expr_node *n)
-// {
-    
-//     if (n == NULL)
-//     {
-//         char output[MAX_STRING_SIZE];
-//         sprintf(output, "%s", to_concrete(n->node));
-//         return strcat("", output); 
-//     }
-//     else
-//     {
-//         char element[MAX_STRING_SIZE];
-//         sprintf(element, "%s,", to_concrete(n->node));
-//         return strcat(list_to_string(n->next), element);
-//     }
+char *remove_double_quotes(char *input)
+{
+    // input[strlen(input) - 1] = '\0';
+    char *tmp = malloc(strlen(input) + 1); 
+    strcpy(tmp, input);
+    tmp[strlen(tmp) - 1] = '\0';
+    memmove(tmp, tmp + 1, strlen(tmp));
 
-// }
+    return tmp; 
+    
+}

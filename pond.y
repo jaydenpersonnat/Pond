@@ -93,7 +93,7 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
   | TRUE          { $$ = create_bool_node(BOOL, true);}
   | FALSE         { $$ = create_bool_node(BOOL, false);}
-  | STRS          { $$ = create_str_node(STR, $1); }
+  | STRS          { $$ = create_str_node(STR, remove_double_quotes($1)); }
   | exp ADD exp { $$ = create_binop_node(PLUS, $1, $3); }
   | exp SUB exp { $$ = create_binop_node(MINUS, $1, $3); }
   | exp MUL exp    {$$ = create_binop_node(TIMES, $1, $3); }
@@ -116,8 +116,8 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | ID ASSIGN exp    { $$ = create_assign_node($1, $3);}
   | ID             {$$ = create_varid_node($1);}   
   | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
-  | STOP                  {$$ = create_break_node(); } 
-  | GETINT LPAR STRS RPAR {$$ = create_getnum_node($3);}
+  | STOP                  {$$ = create_break_node(); }  
+  | GETINT LPAR STRS RPAR {$$ = create_getnum_node(remove_double_quotes($3));}
   | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node($3); } 
   | GETSTRING LPAR STRS RPAR {$$ = create_getstr_node($3); }
   | exp EOL              { $$ = $1; } 
@@ -130,8 +130,6 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | ID LPAR varidlist RPAR LBRACK exp RBRACK {$$ = create_func_node($1, $3, $6); }
   | ID LPAR explist RPAR            {$$ = create_app_node($1, $3); }
   | OUTPUT exp                         {$$ = create_return_node($2); }
-
-
  ;       
 %%            
                

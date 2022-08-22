@@ -1,18 +1,1 @@
 
-
-divby5(x)
-{
-    if x mod 5 equals 0
-    {
-        output TRUE;
-    };
-    if x mod 5 != 0
-    {
-        output FALSE;
-    }
-};
-
-bool1 = divby5(100);
-print(bool1);
-
-

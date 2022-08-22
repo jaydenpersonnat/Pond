@@ -1641,7 +1641,7 @@ yyreduce:
 
   case 11:
 #line 96 "pond.y"
-    { (yyval.exp) = create_str_node(STR, (yyvsp[(1) - (1)].strval)); ;}
+    { (yyval.exp) = create_str_node(STR, remove_double_quotes((yyvsp[(1) - (1)].strval))); ;}
     break;
 
   case 12:
@@ -1761,7 +1761,7 @@ yyreduce:
 
   case 35:
 #line 120 "pond.y"
-    {(yyval.exp) = create_getnum_node((yyvsp[(3) - (4)].strval));;}
+    {(yyval.exp) = create_getnum_node(remove_double_quotes((yyvsp[(3) - (4)].strval)));;}
     break;
 
   case 36:
@@ -2040,7 +2040,7 @@ yyreturn:
 }
 
 
-#line 136 "pond.y"
+#line 134 "pond.y"
             
                
     
