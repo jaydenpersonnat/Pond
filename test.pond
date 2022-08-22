@@ -1,3 +1,5 @@
 
-
-print([])
+for i = 0 to 20 add 4
+{
+    print(i);
+}

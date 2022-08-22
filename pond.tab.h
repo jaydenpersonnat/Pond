@@ -138,12 +138,13 @@ typedef union YYSTYPE
 {
     int intval; 
     double fval; 
-    char strval[60]; 
+    char *strval; 
     expr *exp; 
-    expr_node *list; 
+    // expr_node *list;  
+    // char **strarr; 
 }
 /* Line 1529 of yacc.c.  */
-#line 147 "pond.tab.h"
+#line 148 "pond.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

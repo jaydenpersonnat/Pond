@@ -24,6 +24,7 @@ struct WHILELOOP;
 struct DOLOOP; 
 struct expr_node;
 struct exprlist;
+struct FUNC;
 
 enum uops{
     ABSV,
@@ -226,12 +227,22 @@ typedef struct expr_node
 }
 expr_node; 
 
+typedef struct FUNC
+{  
+    enum types type; 
+    char name[MAX_STRING_SIZE];
+    char **varidnames;
+    struct expr *body; 
+} FUNC; 
+
+
 typedef struct exprlist
 {
     enum types type; 
     struct expr_node *list; 
 }
 exprlist; 
+
 
 
 typedef struct expr
@@ -257,6 +268,7 @@ typedef struct expr
         GETFLOAT_f getfloat; 
         GETSTR_f getstr; 
         exprlist explist; 
+        FUNC function; 
     };
 }
 expr; 
@@ -287,6 +299,8 @@ expr *create_getfloat_node(char *prompt);
 expr *create_getstr_node(char *prompt); 
 expr_node *cons(expr *exp, expr_node *list);
 expr *create_list_node(expr_node *list);
+expr *create_func_node(char *name,char **varidnames, expr *body);
+char **cons_var(char *item, char** arr, int size);
 
 
 #endif
