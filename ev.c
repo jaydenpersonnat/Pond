@@ -368,6 +368,30 @@ expr *binopeval(BINOP b_exp)
             ptr1->next = ptr2; 
             return create_list_node(head); 
         }
+        case INDEX:
+        {
+            int pos = b_exp.left->integer.value; 
+
+            if (b_exp.left->integer.type == NUM && b_exp.right->explist.type == EXPLIST)
+            {
+                expr_node *ptr1 = b_exp.right->explist.list; 
+                int counter = 0;
+                while (counter != pos)
+                {
+                    ptr1 = ptr1->next; 
+                    counter++; 
+                }
+                return ptr1->node; 
+            }
+            else if (b_exp.left->integer.type == NUM && b_exp.right->string.type == STR)
+            {
+                char tmp[2]; 
+                tmp[0] = b_exp.right->string.value[pos];
+                tmp[1] = '\0';
+
+                return create_str_node(STR, tmp);
+            }
+        }
     }
 }
 

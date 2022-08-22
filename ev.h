@@ -51,6 +51,7 @@ enum bops{
     OROP, 
     SJOIN, 
     LJOIN, 
+    INDEX, 
 };
 
 enum types{
@@ -237,7 +238,6 @@ typedef struct expr_node
     enum types type; 
     struct expr *node; 
     struct expr_node *next; 
-    int index; 
 }
 expr_node; 
 

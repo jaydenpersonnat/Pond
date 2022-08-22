@@ -135,23 +135,15 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | ID LPAR explist RPAR            {$$ = create_app_node($1, $3); }
   | OUTPUT exp                         {$$ = create_return_node($2); }
   | LBRACK exp RBRACK                  {$$ = $2; } 
-//   | exp LBRACK NUMBER RBRACK          {   
-//                                             int counter = 0;
-//                                             expr_node *ptr = $1->explist.list; 
-//                                             while (counter != $3)
-//                                             {
-//                                                 ptr = ptr->next;
-//                                                 counter++; 
-//                                             }
-//                                             $$ = ptr->node; 
-//                                        }
+  | exp LBRACK exp RBRACK           {$$ = create_binop_node(INDEX, $3, $1);}  
+
  ;       
 %%            
                
     
 int main(int argc, char **argv) 
 {
-    init_hash_table();  
+    init_hash_table();   
 
     yyin = fopen(argv[1], "r"); 
 
