@@ -201,7 +201,7 @@ typedef union YYSTYPE
     double fval; 
     char strval[60]; 
     expr *exp; 
-    exprlist *list; 
+    expr_node *list; 
 }
 /* Line 193 of yacc.c.  */
 #line 208 "pond.tab.c"
@@ -439,7 +439,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  43
+#define YYNRULES  42
 /* YYNRULES -- Number of states.  */
 #define YYNSTATES  102
 
@@ -493,9 +493,9 @@ static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     5,     9,    11,    13,    15,    17,    19,
       21,    25,    29,    33,    37,    41,    45,    49,    52,    56,
-      60,    64,    68,    72,    76,    80,    84,    87,    90,    94,
-      97,   101,   103,   108,   110,   115,   120,   125,   128,   132,
-     138,   150,   156,   162
+      60,    64,    68,    72,    76,    80,    84,    87,    91,    94,
+      98,   100,   105,   107,   112,   117,   122,   125,   129,   135,
+     147,   153,   159
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
@@ -509,15 +509,15 @@ static const yytype_int8 yyrhs[] =
       11,    -1,    49,    12,    49,    -1,    49,    13,    49,    -1,
       49,    14,    49,    -1,    49,    15,    49,    -1,    49,    36,
       49,    -1,    49,    35,    49,    -1,    49,    40,    49,    -1,
-      49,    41,    49,    -1,    49,    14,    -1,    34,    49,    -1,
-      18,    49,    19,    -1,     5,    49,    -1,    21,    22,    49,
-      -1,    21,    -1,    16,    18,    49,    19,    -1,    39,    -1,
-      42,    18,    28,    19,    -1,    43,    18,    28,    19,    -1,
-      44,    18,    28,    19,    -1,    49,    17,    -1,    49,    17,
-      49,    -1,    30,     3,    24,    49,    25,    -1,    31,    21,
-      22,    49,    33,    49,    32,    49,    24,    49,    25,    -1,
-      29,    49,    24,    49,    25,    -1,    23,    49,    24,    49,
-      25,    -1,    37,    48,    38,    -1
+      49,    41,    49,    -1,    34,    49,    -1,    18,    49,    19,
+      -1,     5,    49,    -1,    21,    22,    49,    -1,    21,    -1,
+      16,    18,    49,    19,    -1,    39,    -1,    42,    18,    28,
+      19,    -1,    43,    18,    28,    19,    -1,    44,    18,    28,
+      19,    -1,    49,    17,    -1,    49,    17,    49,    -1,    30,
+       3,    24,    49,    25,    -1,    31,    21,    22,    49,    33,
+      49,    32,    49,    24,    49,    25,    -1,    29,    49,    24,
+      49,    25,    -1,    23,    49,    24,    49,    25,    -1,    37,
+      48,    38,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
@@ -527,7 +527,7 @@ static const yytype_uint8 yyrline[] =
       90,    91,    92,    93,    94,    95,    96,    97,    98,    99,
      100,   101,   102,   103,   104,   105,   106,   107,   108,   109,
      110,   111,   112,   113,   114,   115,   116,   117,   118,   119,
-     120,   121,   122,   123
+     120,   121,   122
 };
 #endif
 
@@ -566,7 +566,7 @@ static const yytype_uint8 yyr1[] =
       49,    49,    49,    49,    49,    49,    49,    49,    49,    49,
       49,    49,    49,    49,    49,    49,    49,    49,    49,    49,
       49,    49,    49,    49,    49,    49,    49,    49,    49,    49,
-      49,    49,    49,    49
+      49,    49,    49
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -574,9 +574,9 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     3,     1,     1,     1,     1,     1,     1,
        3,     3,     3,     3,     3,     3,     3,     2,     3,     3,
-       3,     3,     3,     3,     3,     3,     2,     2,     3,     2,
-       3,     1,     4,     1,     4,     4,     4,     2,     3,     5,
-      11,     5,     5,     3
+       3,     3,     3,     3,     3,     3,     2,     3,     2,     3,
+       1,     4,     1,     4,     4,     4,     2,     3,     5,    11,
+       5,     5,     3
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -584,17 +584,17 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     5,     0,     0,     0,     0,     6,    31,     0,     7,
-       8,     9,     0,     0,     0,     0,     0,    33,     0,     0,
-       0,     0,     2,    29,     0,     0,     0,     0,     0,     0,
-       0,     0,    27,     0,     4,     0,     0,     0,     1,     0,
-       0,     0,     0,     0,     0,    17,     0,     0,    26,     0,
-      37,     0,     0,     0,     0,    15,     0,    28,    30,     0,
-       0,     0,     0,    43,     0,     0,     0,     0,    10,    11,
-      12,    13,    14,    16,    18,    19,    20,    21,    38,    23,
-      22,    24,    25,    32,     0,     0,     0,     0,     3,    34,
-      35,    36,    42,    41,    39,     0,     0,     0,     0,     0,
-       0,    40
+       0,     5,     0,     0,     0,     0,     6,    30,     0,     7,
+       8,     9,     0,     0,     0,     0,     0,    32,     0,     0,
+       0,     0,     2,    28,     0,     0,     0,     0,     0,     0,
+       0,     0,    26,     0,     4,     0,     0,     0,     1,     0,
+       0,     0,     0,     0,     0,    17,     0,     0,     0,     0,
+      36,     0,     0,     0,     0,    15,     0,    27,    29,     0,
+       0,     0,     0,    42,     0,     0,     0,     0,    10,    11,
+      12,    13,    14,    16,    18,    19,    20,    21,    37,    23,
+      22,    24,    25,    31,     0,     0,     0,     0,     3,    33,
+      34,    35,    41,    40,    38,     0,     0,     0,     0,     0,
+       0,    39
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -1585,12 +1585,12 @@ yyreduce:
 
   case 3:
 #line 81 "pond.y"
-    { expr_node *ptr = malloc(sizeof(expr_node)); ptr = &((yyvsp[(3) - (3)].exp)->explist);cons((yyvsp[(1) - (3)].exp), ptr);}
+    { (yyval.list) = cons((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].list));}
     break;
 
   case 4:
 #line 82 "pond.y"
-    {cons((yyvsp[(1) - (1)].exp), NULL); ;}
+    { (yyval.list) = cons((yyvsp[(1) - (1)].exp), NULL); ;}
     break;
 
   case 5:
@@ -1698,89 +1698,89 @@ yyreduce:
     { (yyval.exp) = create_binop_node(OROP, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
+  case 26:
+#line 106 "pond.y"
+    {(yyval.exp) = create_unop_node(NOTOP, (yyvsp[(2) - (2)].exp)); ;}
+    break;
+
   case 27:
 #line 107 "pond.y"
-    {(yyval.exp) = create_unop_node(NOTOP, (yyvsp[(2) - (2)].exp)); ;}
+    {(yyval.exp) = (yyvsp[(2) - (3)].exp);;}
     break;
 
   case 28:
 #line 108 "pond.y"
-    {(yyval.exp) = (yyvsp[(2) - (3)].exp);;}
+    {(yyval.exp) = create_unop_node(NEGATIVE, (yyvsp[(2) - (2)].exp)); ;}
     break;
 
   case 29:
 #line 109 "pond.y"
-    {(yyval.exp) = create_unop_node(NEGATIVE, (yyvsp[(2) - (2)].exp)); ;}
+    { (yyval.exp) = create_assign_node((yyvsp[(1) - (3)].strval), (yyvsp[(3) - (3)].exp));;}
     break;
 
   case 30:
 #line 110 "pond.y"
-    { (yyval.exp) = create_assign_node((yyvsp[(1) - (3)].strval), (yyvsp[(3) - (3)].exp));;}
+    {(yyval.exp) = create_varid_node((yyvsp[(1) - (1)].strval));;}
     break;
 
   case 31:
 #line 111 "pond.y"
-    {(yyval.exp) = create_varid_node((yyvsp[(1) - (1)].strval));;}
+    { (yyval.exp) = create_print_node((yyvsp[(3) - (4)].exp)); ;}
     break;
 
   case 32:
 #line 112 "pond.y"
-    { (yyval.exp) = create_print_node((yyvsp[(3) - (4)].exp)); ;}
+    {(yyval.exp) = create_break_node(); ;}
     break;
 
   case 33:
 #line 113 "pond.y"
-    {(yyval.exp) = create_break_node(); ;}
+    {(yyval.exp) = create_getnum_node((yyvsp[(3) - (4)].strval));;}
     break;
 
   case 34:
 #line 114 "pond.y"
-    {(yyval.exp) = create_getnum_node((yyvsp[(3) - (4)].strval));;}
+    {(yyval.exp) = create_getfloat_node((yyvsp[(3) - (4)].strval)); ;}
     break;
 
   case 35:
 #line 115 "pond.y"
-    {(yyval.exp) = create_getfloat_node((yyvsp[(3) - (4)].strval)); ;}
+    {(yyval.exp) = create_getstr_node((yyvsp[(3) - (4)].strval)); ;}
     break;
 
   case 36:
 #line 116 "pond.y"
-    {(yyval.exp) = create_getstr_node((yyvsp[(3) - (4)].strval)); ;}
+    { (yyval.exp) = (yyvsp[(1) - (2)].exp); ;}
     break;
 
   case 37:
 #line 117 "pond.y"
-    { (yyval.exp) = (yyvsp[(1) - (2)].exp); ;}
+    {(yyval.exp) = create_seq_node((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
     break;
 
   case 38:
 #line 118 "pond.y"
-    {(yyval.exp) = create_seq_node((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp)); ;}
+    { (yyval.exp) = create_doloop_node((yyvsp[(2) - (5)].intval), (yyvsp[(4) - (5)].exp));;}
     break;
 
   case 39:
 #line 119 "pond.y"
-    { (yyval.exp) = create_doloop_node((yyvsp[(2) - (5)].intval), (yyvsp[(4) - (5)].exp));;}
+    { (yyval.exp) = create_forloop_node((yyvsp[(2) - (11)].strval), (yyvsp[(4) - (11)].exp), (yyvsp[(6) - (11)].exp), (yyvsp[(8) - (11)].exp), (yyvsp[(10) - (11)].exp), (yyvsp[(4) - (11)].exp)); ;}
     break;
 
   case 40:
 #line 120 "pond.y"
-    { (yyval.exp) = create_forloop_node((yyvsp[(2) - (11)].strval), (yyvsp[(4) - (11)].exp), (yyvsp[(6) - (11)].exp), (yyvsp[(8) - (11)].exp), (yyvsp[(10) - (11)].exp), (yyvsp[(4) - (11)].exp)); ;}
+    {(yyval.exp) = create_if_node((yyvsp[(2) - (5)].exp), (yyvsp[(4) - (5)].exp));;}
     break;
 
   case 41:
 #line 121 "pond.y"
-    {(yyval.exp) = create_if_node((yyvsp[(2) - (5)].exp), (yyvsp[(4) - (5)].exp));;}
+    {(yyval.exp) = create_while_node((yyvsp[(2) - (5)].exp), (yyvsp[(4) - (5)].exp));;}
     break;
 
   case 42:
 #line 122 "pond.y"
-    {(yyval.exp) = create_while_node((yyvsp[(2) - (5)].exp), (yyvsp[(4) - (5)].exp));;}
-    break;
-
-  case 43:
-#line 123 "pond.y"
-    { (yyval.exp) = (yyvsp[(2) - (3)].exp); ;}
+    { (yyval.exp) = create_list_node((yyvsp[(2) - (3)].list)); ;}
     break;
 
 
@@ -1999,13 +1999,13 @@ yyreturn:
 }
 
 
-#line 125 "pond.y"
-         
-         
+#line 124 "pond.y"
+            
+               
     
 int main(int argc, char **argv) 
 {
-    init_hash_table(); 
+    init_hash_table();  
 
     yyin = fopen(argv[1], "r"); 
 

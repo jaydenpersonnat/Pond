@@ -10,6 +10,8 @@
 
 char *to_concrete(expr *expression);
 expr *eval(expr *expression);
+// char *list_to_string(expr_node *n);
+
 
 char buffer[INT_SIZE];
 
@@ -73,69 +75,25 @@ expr *create_eval_error(char *msg)
     return eval_error_exp; 
 }
 
-expr *cons(expr *exp, expr_node *list)
+expr_node *cons(expr *exp, expr_node *list)
 {
-    expr *list_exp = malloc(sizeof(expr_node)); 
-    expr_node element; 
-    element.next = list;
-    element.node = exp;
-    list_exp->explist = element; 
+    expr_node *new_node = malloc(sizeof(expr_node));
+    new_node->node = exp; 
+    new_node->next = list; 
+
+    return new_node; 
+}
+
+expr *create_list_node(expr_node *list)
+{
+    expr *list_exp = malloc(sizeof(exprlist));
+    exprlist explist;
+    explist.type = EXPLIST; 
+    explist.list = list; 
+    list_exp->explist = explist; 
 
     return list_exp; 
-
-    // expr *list_exp = malloc(sizeof(exprlist));
-    // exprlist explist;
-    // expr_node *new_node = malloc(sizeof(expr_node)); 
-    // new_node->next = NULL; 
-    // new_node->node = exp; 
-
-    // if (list == NULL)
-    // {
-    //     new_node->index = 0;
-    //     explist.type = EXPLIST;
-    //     explist.head = new_node;
-    //     explist.tail = new_node; 
-    //     explist.length = 1; 
-    //     list_exp->explist = explist;
-
-    //     return list_exp; 
-    // }
-    // else
-    // {
-    //     list->tail->next = new_node;
-    //     list->tail = new_node; 
-    //     list->length = list->length++; 
-    //     list_exp->explist = *list; 
-    //     return list_exp; 
-    // }
 }
-// expr *append_expr_lst(expr *exp, exprlist *list)
-// {
-//     expr *list_exp = malloc(sizeof(exprlist)); 
-//     exprlist explist;
-//     expr_node *new_node = malloc(sizeof(expr_node));
-//     new_node->next = NULL; 
-//     new_node->node = exp; 
-
-//     if (list == NULL)
-//     {
-//         explist.type = LIST; 
-//         explist.head = new_node;
-//         explist.tail = new_node; 
-//         list_exp->exprlist = explist;
-
-//         return list_exp;
-//     }
-//     else 
-//     {
-//         list->tail->next = new_node;
-//         list->tail = new_node; 
-
-//         list_exp->exprlist = *list; 
-//         return list_exp; 
-
-//     }
-// }
 
 expr *create_doloop_node(int iterations, expr *exp)
 {
@@ -495,14 +453,16 @@ expr *eval(expr *expression)
     else if (expression->explist.type == EXPLIST)
     {
         expr_node *ptr = malloc(sizeof(expr_node));
-        ptr = &(expression->explist); 
+        expr *new_list = create_list_node(expression->explist.list);
+
+        ptr = new_list->explist.list; 
         while (ptr != NULL)
         {
             ptr->node = eval(ptr->node);
             ptr = ptr->next; 
         }
 
-        return expression; 
+        return new_list; 
 
     }
     else if (expression->error.type == ERROR)
@@ -557,14 +517,19 @@ char *to_concrete(expr *expression)
     }
     else if (expression->explist.type == EXPLIST)
     {
-        // char string_list[MAX_STRING_SIZE];
-        // expr_node *cursor = expression->explist; 
-        // while (cursor != NULL)
-        // {
-        //     strcat(buffer, "world");
-        //     cursor = cursor->next; 
-        // }
-        strcpy(buffer, "test"); 
+        char string_list[MAX_STRING_SIZE] = "";
+        expr_node *cursor = expression->explist.list; 
+        // strcpy(buffer, list_to_string(expression->explist.list));
+        while (cursor != NULL)
+        {
+            char element[MAX_STRING_SIZE];
+            sprintf(element, "%s,", to_concrete(cursor->node));
+            strcat(string_list, element);
+            cursor = cursor->next; 
+        }
+
+        string_list[strlen(string_list) - 1] = '\0';
+        sprintf(buffer, "[%s]", string_list);
 
         return buffer; 
     }
@@ -572,7 +537,23 @@ char *to_concrete(expr *expression)
     {
         strcpy(buffer, "");
         return buffer; 
-    }
-   
+    } 
 }
 
+// char *list_to_string(expr_node *n)
+// {
+    
+//     if (n == NULL)
+//     {
+//         char output[MAX_STRING_SIZE];
+//         sprintf(output, "%s", to_concrete(n->node));
+//         return strcat("", output); 
+//     }
+//     else
+//     {
+//         char element[MAX_STRING_SIZE];
+//         sprintf(element, "%s,", to_concrete(n->node));
+//         return strcat(list_to_string(n->next), element);
+//     }
+
+// }

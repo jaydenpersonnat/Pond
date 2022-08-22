@@ -229,9 +229,7 @@ expr_node;
 typedef struct exprlist
 {
     enum types type; 
-    struct expr_node *head; 
-    struct expr_node *tail; 
-    int length; 
+    struct expr_node *list; 
 }
 exprlist; 
 
@@ -258,7 +256,7 @@ typedef struct expr
         GETNUM_f getnum; 
         GETFLOAT_f getfloat; 
         GETSTR_f getstr; 
-        expr_node explist; 
+        exprlist explist; 
     };
 }
 expr; 
@@ -287,7 +285,8 @@ expr *create_while_node(expr *cond, expr *exp);
 expr *create_getnum_node(char *prompt);
 expr *create_getfloat_node(char *prompt);
 expr *create_getstr_node(char *prompt); 
-expr *cons(expr *exp, expr_node *list);
+expr_node *cons(expr *exp, expr_node *list);
+expr *create_list_node(expr_node *list);
 
 
 #endif

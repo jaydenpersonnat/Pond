@@ -18,7 +18,7 @@
     double fval; 
     char strval[60]; 
     expr *exp; 
-    exprlist *list; 
+    expr_node *list; 
 }
 
 %token NUMBER 
@@ -53,8 +53,8 @@
 %token GETSTRING 
 %token COMMA
 
-// %type <exprlist *> explist
-%type <exp> exp explist
+%type <list> explist
+%type <exp> exp 
 %type <intval> NUMBER 
 %type <strval> ID STRS
 %type <fval> FLOAT 
@@ -78,9 +78,9 @@ program:
 ; 
  
 
-explist: exp COMMA explist { expr_node *ptr = malloc(sizeof(expr_node)); ptr = &($3->explist);cons($1, ptr)}
-        | exp             {cons($1, NULL); } 
-;
+explist: exp COMMA explist { $$ = cons($1, $3)}
+        | exp             { $$ = cons($1, NULL); } 
+; 
 
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
@@ -99,12 +99,11 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | exp NOTEQUAL exp {$$ = create_binop_node(NOTEQUALTO, $1, $3); }
   | exp LESS  exp  {$$ = create_binop_node(LESSTHAN, $1, $3); } 
   | exp GREATER exp {$$ = create_binop_node(GREATERTHAN, $1, $3); } 
-  | exp GREATEREQUAL exp {$$ = create_binop_node(GREATERTHANEQUAL, $1, $3);}
+  | exp GREATEREQUAL exp {$$ = create_binop_node(GREATERTHANEQUAL, $1, $3);} 
   | exp LESSEQUAL exp {$$ = create_binop_node(LESSTHANEQUAL, $1, $3); }
   | exp AND exp      {$$ = create_binop_node(ANDOP, $1, $3); }
   | exp OR exp       { $$ = create_binop_node(OROP, $1, $3); }
-  | exp LESS
-  | NOT exp         {$$ = create_unop_node(NOTOP, $2); }  
+  | NOT exp         {$$ = create_unop_node(NOTOP, $2); }   
   | LPAR exp RPAR  {$$ = $2;} 
   | SUB exp        {$$ = create_unop_node(NEGATIVE, $2); }
   | ID ASSIGN exp    { $$ = create_assign_node($1, $3);}
@@ -120,14 +119,14 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
   | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4);}
   | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}  
-  | LSQUARE explist RSQUARE       { $$ = $2; }
- ;      
-%%         
-         
+  | LSQUARE explist RSQUARE       { $$ = create_list_node($2); }
+ ;       
+%%            
+               
     
 int main(int argc, char **argv) 
 {
-    init_hash_table(); 
+    init_hash_table();  
 
     yyin = fopen(argv[1], "r"); 
 

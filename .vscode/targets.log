@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Sat Aug 20 01:18:29 2022
+# Make data base, printed on Sun Aug 21 20:36:26 2022
 
 # Variables
 
@@ -77,7 +77,7 @@ VSCODE_CODE_CACHE_PATH = /Users/jaydenpersonnat/Library/Application Support/Code
 # environment
 LOGNAME = jaydenpersonnat
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
@@ -161,9 +161,9 @@ VSCODE_PID = 651
 
 # Directories
 
-# . (device 16777234, inode 39443678): 19 files, no impossibilities.
+# . (device 16777234, inode 39443678): 21 files, no impossibilities.
 
-# 19 files, no impossibilities in 1 directories.
+# 21 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -183,7 +183,6 @@ all:
 # Not a target:
 .SUFFIXES:
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -237,6 +236,6 @@ pond.y:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Aug 20 01:18:29 2022
+# Finished Make data base on Sun Aug 21 20:36:26 2022
 
  

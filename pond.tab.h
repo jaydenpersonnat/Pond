@@ -140,7 +140,7 @@ typedef union YYSTYPE
     double fval; 
     char strval[60]; 
     expr *exp; 
-    exprlist *list; 
+    expr_node *list; 
 }
 /* Line 1529 of yacc.c.  */
 #line 147 "pond.tab.h"
