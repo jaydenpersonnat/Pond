@@ -560,7 +560,17 @@ expr *eval(expr *expression)
 
         if (eval_body->return_t.type == RETURN_t)
         {
-            return eval(eval_body->return_t.exp);
+            expr *output = eval(eval_body->return_t.exp);
+
+            // delete all local variables from sym table
+            varid_node *ptr3 = def->function.list; 
+            while (ptr3 != NULL)
+            {
+                delete_node(ptr3->varid);
+                ptr3 = ptr3->next; 
+            }
+
+            return output;
         }
 
         return expression;

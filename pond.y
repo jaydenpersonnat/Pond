@@ -127,12 +127,12 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
   | IF exp LBRACK exp RBRACK ELSE exp {$$ = create_if_node($2, $4, $7);}
   | IF exp LBRACK exp RBRACK   { $$ = create_if_node($2, $4, create_int_node(NUM, 0));}
-  | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}  
+  | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}   
   | LSQUARE explist RSQUARE       { $$ = create_list_node($2); }
   | ID LPAR varidlist RPAR LBRACK exp RBRACK {$$ = create_func_node($1, $3, $6); }
   | ID LPAR explist RPAR            {$$ = create_app_node($1, $3); }
   | OUTPUT exp                         {$$ = create_return_node($2); }
-  | LBRACK exp RBRACK                  {$$ = $2; }
+  | LBRACK exp RBRACK                  {$$ = $2; } 
 //   | exp LBRACK NUMBER RBRACK          {   
 //                                             int counter = 0;
 //                                             expr_node *ptr = $1->explist.list; 

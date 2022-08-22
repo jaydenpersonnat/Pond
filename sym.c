@@ -65,3 +65,30 @@ expr *lookup(char *id)
     snprintf(varidname, sizeof(varidname), "variable \"%s\" not found", id);
     return create_eval_error(varidname); 
 }
+
+void delete_node(char *id)
+{
+    int index = hash(id);
+    node *prev = sym_table[index];
+    node *cursor = sym_table[index];
+
+    if (cursor != NULL && strcmp(cursor->id, id) == 0)
+    {
+        sym_table[index] = cursor->next;
+        free(cursor);
+        return; 
+    }
+    
+    while (cursor != NULL && (strcmp(cursor->id, id)) != 0)
+    {
+        prev = cursor; 
+        cursor = cursor->next; 
+    }
+
+    if (cursor == NULL) return; 
+
+    prev->next = cursor->next;
+
+    free(cursor);
+
+}

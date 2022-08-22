@@ -1,0 +1,17 @@
+
+x = 20;
+
+fact(x)
+{
+    if x equals 0
+    {
+        return 1;
+    }
+    else if x != 0
+    {
+        return x * fact(x - 1);
+    }
+};
+
+print(fact(6));
+print(x);

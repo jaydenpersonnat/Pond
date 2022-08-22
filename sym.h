@@ -22,3 +22,4 @@ void insert(char *id, expr *val);
 
 expr *lookup(char *id);
 
+void delete_node(char *id);
