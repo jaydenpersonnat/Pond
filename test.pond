@@ -1,5 +1,12 @@
 
-for i = 0 to 20 add 4
+factorial(x)
 {
-    print(i);
-}
+    product = 1;
+    for i = 1 to x add 1
+    {
+        product = i * product; 
+    };
+
+    print(product);
+};
+factorial(6);

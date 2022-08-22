@@ -10,6 +10,7 @@
 
 char *to_concrete(expr *expression);
 expr *eval(expr *expression);
+// char *list_to_string(expr_node *n);
 
 
 char buffer[INT_SIZE];
@@ -83,16 +84,28 @@ expr_node *cons(expr *exp, expr_node *list)
     return new_node; 
 }
 
-// expr *create_list_node(expr_node *list)
-// {
-//     expr *list_exp = malloc(sizeof(exprlist));
-//     exprlist explist;
-//     explist.type = EXPLIST; 
-//     explist.list = list; 
-//     list_exp->explist = explist; 
+expr *create_list_node(expr_node *list)
+{
+    expr *list_exp = malloc(sizeof(exprlist));
+    exprlist explist;
+    explist.type = EXPLIST; 
+    explist.list = list; 
+    list_exp->explist = explist; 
 
-//     return list_exp; 
-// }
+    return list_exp; 
+}
+
+expr *create_app_node(char *name, expr_node *list)
+{
+    expr *app_exp = malloc(sizeof(APP));
+    APP app;
+    app.type = FUNCAPP; 
+    strcpy(app.name, name);
+    app.list = list;
+    app_exp->app = app; 
+
+    return app_exp; 
+}
 
 expr *create_doloop_node(int iterations, expr *exp)
 {
@@ -214,37 +227,27 @@ expr *create_getstr_node(char *prompt)
     return getstr_exp; 
 }
 
+varid_node *cons_var(char *varidname, varid_node *n)
+{
+    varid_node *new_node = malloc(sizeof(varid_node));
+    strcpy(new_node->varid, varidname);
+    new_node->next = n; 
 
-// char **cons_var(char *item, char** arr, int size)
-// {
-//     if (arr == NULL)
-//     {
-//         char **tmp = malloc((strlen(item) + 1));
-//         tmp[0] = item; 
-//         return tmp; 
-//     }
-//     char **tmp = malloc((size + 1) * sizeof(char*));
-//     // char **tmp = malloc(n * sizeof(char));
-//     tmp[0] = item; 
-//     for (int i = 1; i <= size; i++)
-//     {
-//         tmp[i] = arr[i - 1];
-//     }
-//     return tmp; 
+    return new_node; 
+}
 
-// }
+expr *create_func_node(char *name, varid_node *varidnames, expr *body)
+{
+    expr *func_exp = malloc(sizeof(FUNC));
+    FUNC fun; 
+    fun.type = FUNCTION;
+    strcpy(fun.name, name);
+    fun.list = varidnames; 
+    fun.body = body;
+    func_exp->function = fun; 
 
-// expr *create_func_node(char *name,char **varidnames, expr *body)
-// {
-//     expr *func_exp = malloc(sizeof(FUNC));
-//     FUNC fun; 
-//     fun.type = FUNCTION;
-//     strcpy(fun.name, name);
-//     fun.varidnames = cons_var("hi", NULL, 0); 
-//     func_exp->function = fun; 
-
-//     return func_exp; 
-// }
+    return func_exp; 
+}
 
 expr *unopeval(UNOP u_exp)
 {
@@ -481,27 +484,42 @@ expr *eval(expr *expression)
             value[strlen (value) - 1] = '\0';
         return create_str_node(STR, value);
     }
-    // else if (expression->explist.type == EXPLIST)
-    // {
-    //     expr_node *ptr = malloc(sizeof(expr_node));
-    //     expr *new_list = create_list_node(expression->explist.list);
+    else if (expression->explist.type == EXPLIST)
+    {
+        expr_node *ptr = malloc(sizeof(expr_node));
+        expr *new_list = create_list_node(expression->explist.list);
 
-    //     ptr = new_list->explist.list; 
-    //     while (ptr != NULL)
-    //     {
-    //         ptr->node = eval(ptr->node);
-    //         ptr = ptr->next; 
-    //     }
+        ptr = new_list->explist.list; 
+        while (ptr != NULL)
+        {
+            ptr->node = eval(ptr->node);
+            ptr = ptr->next; 
+        }
 
-    //     return new_list; 
+        return new_list; 
 
-    // }
-    // else if (expression->function.type == FUNCTION)
-    // {
-    //     insert(expression->function.name, expression);
-    //     return expression; 
-    //     // return create_assign_node()
-    // }
+    }
+    else if (expression->function.type == FUNCTION)
+    {
+        insert(expression->function.name, expression);
+        return expression; 
+        // return create_assign_node()
+    }
+    else if (expression->app.type == FUNCAPP)
+    {
+        expr_node *ptr1 = expression->app.list;
+        expr *def = lookup(expression->app.name);
+        varid_node *ptr2 = def->function.list; 
+
+        while (ptr1 != NULL && ptr2 != NULL)
+        {
+            eval(create_assign_node(ptr2->varid, ptr1->node));
+            ptr1 = ptr1->next;
+            ptr2 = ptr2->next; 
+        }
+
+        return eval(def->function.body);
+    }
     else if (expression->error.type == ERROR)
     {
         return expression;  
@@ -518,12 +536,13 @@ char *to_concrete(expr *expression)
     if (expression->integer.type == NUM)
     {
         sprintf(buffer, "%d", expression->integer.value);
-
+        // free(expression); 
         return buffer;
     }
     else if (expression->decimal.type == DECIMAL)
     {
         gcvt(expression->decimal.value, MAX_FLOAT_SIZE, buffer);
+        // free(expression);
         return buffer; 
     }
     else if (expression->boolean.type == BOOL)
@@ -531,16 +550,19 @@ char *to_concrete(expr *expression)
         if (expression->boolean.value)
         {
             strcpy(buffer, "TRUE"); 
+            // free(expression);
             return buffer; 
         }
         strcpy(buffer, "FALSE"); 
 
+        // free(expression); 
         return buffer;
     }
     else if (expression->string.type == STR)
     {
         strcpy(buffer, expression->string.value);
 
+        // free(expression); 
         return buffer; 
     }
     else if (expression->error.type == ERROR)
@@ -548,24 +570,24 @@ char *to_concrete(expr *expression)
         strcpy(buffer, expression->error.msg);
         return buffer; 
     }
-    // else if (expression->explist.type == EXPLIST)
-    // {
-    //     char string_list[MAX_STRING_SIZE] = "";
-    //     expr_node *cursor = expression->explist.list; 
+    else if (expression->explist.type == EXPLIST)
+    {
+        char string_list[MAX_STRING_SIZE] = "";
+        expr_node *cursor = expression->explist.list; 
+        // strcpy(buffer, list_to_string(expression->explist.list));
+        while (cursor != NULL)
+        {
+            char element[MAX_STRING_SIZE];
+            sprintf(element, "%s,", to_concrete(cursor->node));
+            strcat(string_list, element);
+            cursor = cursor->next; 
+        }
 
-    //     while (cursor != NULL)
-    //     {
-    //         char element[MAX_STRING_SIZE];
-    //         sprintf(element, "%s,", to_concrete(cursor->node));
-    //         strcat(string_list, element);
-    //         cursor = cursor->next; 
-    //     }
+        string_list[strlen(string_list) - 1] = '\0';
+        sprintf(buffer, "[%s]", string_list);
 
-    //     string_list[strlen(string_list) - 1] = '\0';
-    //     sprintf(buffer, "[%s]", string_list);
-
-    //     return buffer; 
-    // }
+        return buffer; 
+    }
     else
     {
         strcpy(buffer, "");
@@ -573,3 +595,20 @@ char *to_concrete(expr *expression)
     } 
 }
 
+// char *list_to_string(expr_node *n)
+// {
+    
+//     if (n == NULL)
+//     {
+//         char output[MAX_STRING_SIZE];
+//         sprintf(output, "%s", to_concrete(n->node));
+//         return strcat("", output); 
+//     }
+//     else
+//     {
+//         char element[MAX_STRING_SIZE];
+//         sprintf(element, "%s,", to_concrete(n->node));
+//         return strcat(list_to_string(n->next), element);
+//     }
+
+// }

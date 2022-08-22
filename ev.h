@@ -24,7 +24,8 @@ struct WHILELOOP;
 struct DOLOOP; 
 struct expr_node;
 struct exprlist;
-struct FUNC;
+struct FUNC; 
+struct APP; 
 
 enum uops{
     ABSV,
@@ -72,6 +73,7 @@ enum types{
     GETFLOAT, 
     GETSTR, 
     EXPLIST, 
+    FUNCAPP, 
 };
 
 typedef struct INT
@@ -169,6 +171,12 @@ typedef struct BREAK_t
 }
 BREAK_t;
 
+typedef struct RETURN
+{
+    enum types type;
+    
+} RETURN; 
+
 
 typedef struct PRINTI
 {
@@ -227,15 +235,6 @@ typedef struct expr_node
 }
 expr_node; 
 
-typedef struct FUNC
-{  
-    enum types type; 
-    char name[MAX_STRING_SIZE];
-    char **varidnames;
-    struct expr *body; 
-} FUNC; 
-
-
 typedef struct exprlist
 {
     enum types type; 
@@ -243,7 +242,29 @@ typedef struct exprlist
 }
 exprlist; 
 
+typedef struct varid_node
+{
+    char varid[MAX_STRING_SIZE];
+    struct varid_node *next; 
+}
+varid_node;
 
+typedef struct FUNC
+{  
+    enum types type; 
+    char name[MAX_STRING_SIZE];
+    struct varid_node *list;
+    struct expr *body; 
+} FUNC; 
+
+
+typedef struct APP
+{
+    enum types type; 
+    char name[MAX_STRING_SIZE];
+    struct expr_node *list; 
+
+} APP;
 
 typedef struct expr
 {
@@ -269,6 +290,8 @@ typedef struct expr
         GETSTR_f getstr; 
         exprlist explist; 
         FUNC function; 
+        APP app; 
+
     };
 }
 expr; 
@@ -299,8 +322,8 @@ expr *create_getfloat_node(char *prompt);
 expr *create_getstr_node(char *prompt); 
 expr_node *cons(expr *exp, expr_node *list);
 expr *create_list_node(expr_node *list);
-expr *create_func_node(char *name,char **varidnames, expr *body);
-char **cons_var(char *item, char** arr, int size);
-
+expr *create_func_node(char *name, varid_node *varidnames, expr *body);
+varid_node *cons_var(char *varidname, varid_node *n);
+expr *create_app_node(char *name, expr_node *list);
 
 #endif

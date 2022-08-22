@@ -138,10 +138,10 @@ typedef union YYSTYPE
 {
     int intval; 
     double fval; 
-    char *strval; 
+    char strval[60]; 
     expr *exp; 
-    // expr_node *list;  
-    // char **strarr; 
+    expr_node *list; 
+    varid_node *varlist; 
 }
 /* Line 1529 of yacc.c.  */
 #line 148 "pond.tab.h"

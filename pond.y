@@ -10,16 +10,16 @@
 
     int yylex();
     int yyerror(char *s);
-    extern FILE *yyin; 
+    extern FILE *yyin;  
 %}
 
 %union{
     int intval; 
     double fval; 
-    char *strval; 
+    char strval[60]; 
     expr *exp; 
-    // expr_node *list;  
-    // char **strarr; 
+    expr_node *list; 
+    varid_node *varlist; 
 }
 
 %token NUMBER 
@@ -54,20 +54,21 @@
 %token GETSTRING 
 %token COMMA
 
-// %type <strarr> varidlist 
-// %type <list> explist
+%type <varlist> varidlist
+%type <list> explist
 %type <exp> exp 
-%type <intval> NUMBER  
+%type <intval> NUMBER 
 %type <strval> ID STRS
 %type <fval> FLOAT 
+// %type <list> explist
 
- 
+
 // figure out precedence and associativy of operators 
 %left EQUALS NOTEQUAL LESS GREATER LESSEQUAL GREATEREQUAL ASSIGN EOL AND OR
 %left ADD SUB 
 %left MUL DIV MOD
 %right POW
-  
+ 
 %nonassoc NOT  
 %nonassoc ABS 
 %nonassoc FACT
@@ -76,15 +77,16 @@
 %% 
 program: 
   exp      { eval($1); } 
-;  
-  
+; 
  
-// varidlist: ID COMMA varidlist { int size = sizeof($3) / sizeof($3[0]); $$ = cons_var($1, $3, size); }
-//            | ID               { $$ = cons_var($1, NULL, 0); }
 
-// explist: exp COMMA explist { $$ = cons($1, $3)}
-//         | exp             { $$ = cons($1, NULL); } 
-// ; 
+ 
+varidlist: ID COMMA varidlist { $$ = cons_var($1, $3); }
+           | ID               { $$ = cons_var($1, NULL); }
+
+explist: exp COMMA explist { $$ = cons($1, $3)}
+        | exp             { $$ = cons($1, NULL); } 
+; 
 
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
@@ -114,7 +116,7 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | ID             {$$ = create_varid_node($1);}   
   | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
   | STOP                  {$$ = create_break_node(); } 
-  | GETINT LPAR STRS RPAR {$$ = create_getnum_node($3);} 
+  | GETINT LPAR STRS RPAR {$$ = create_getnum_node($3);}
   | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node($3); } 
   | GETSTRING LPAR STRS RPAR {$$ = create_getstr_node($3); }
   | exp EOL              { $$ = $1; } 
@@ -123,8 +125,11 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FOR ID ASSIGN exp TO exp INCR exp LBRACK exp RBRACK { $$ = create_forloop_node($2, $4, $6, $8, $10, $4); }
   | IF exp LBRACK exp RBRACK {$$ = create_if_node($2, $4);}
   | WHILE exp LBRACK exp RBRACK {$$ = create_while_node($2, $4);}  
-//   | LSQUARE explist RSQUARE       { $$ = create_list_node($2); }
-//   | ID LPAR varidlist RPAR LBRACK exp RBRACK {$$ = create_func_node($1, $3, $6); }
+  | LSQUARE explist RSQUARE       { $$ = create_list_node($2); }
+  | ID LPAR varidlist RPAR LBRACK exp RBRACK {$$ = create_func_node($1, $3, $6); }
+  | ID LPAR explist RPAR            {$$ = create_app_node($1, $3); }
+
+
  ;       
 %%            
                
