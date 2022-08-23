@@ -29,7 +29,7 @@
 %token FACT
 %token EQUALS NOTEQUAL 
 %token LESS GREATER 
-%token PRINT 
+%token PRINT PRINTS PRINTN
 %token EOL 
 %token LPAR RPAR 
 %token FLOAT
@@ -119,7 +119,7 @@ binop:
   | exp OR exp       { $$ = create_binop_node(OROP, $1, $3); }
   | exp CONCAT exp   { $$ = create_binop_node(SJOIN, $1, $3); } 
   | exp LISTCONCAT exp {$$ = create_binop_node(LJOIN, $1, $3); } 
-
+ 
 
 
 
@@ -127,13 +127,15 @@ exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
   | TRUE          { $$ = create_bool_node(BOOL, true);}
   | FALSE         { $$ = create_bool_node(BOOL, false);}
-  | STRS          { $$ = create_str_node(STR, remove_double_quotes($1)); }
+  | STRS          { $$ = create_str_node(STR, remove_double_quotes($1)) }
   | binop
   | unop 
   | LPAR exp RPAR  {$$ = $2;} 
   | ID ASSIGN exp    { $$ = create_assign_node($1, $3);} 
   | ID             {$$ = create_varid_node($1);}   
-  | PRINT LPAR exp RPAR  { $$ = create_print_node($3); }   
+  | PRINT LPAR exp RPAR  { $$ = create_print_node($3, false); }   
+  | PRINTN LPAR exp RPAR { $$ = create_print_node($3, false); }   
+  | PRINTS LPAR exp RPAR { $$ = create_print_node($3, true); }   
   | STOP                  {$$ = create_break_node(); }  
   | GETINT LPAR STRS RPAR {$$ = create_getnum_node(remove_double_quotes($3));}
   | GETDEC LPAR STRS RPAR {$$ = create_getfloat_node(remove_double_quotes($3)); }    

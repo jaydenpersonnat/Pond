@@ -54,12 +54,13 @@ expr *create_assign_node(char *varidname, expr *exp)
     return assign_exp; 
 }
 
-expr *create_print_node(expr *exp)
+expr *create_print_node(expr *exp, bool sameline)
 {
     expr *print_exp = malloc(sizeof(PRINTI)); 
     PRINTI print; 
     print.type = PRINTING;
     print.exp = exp;
+    print.sameline = sameline; 
     print_exp->print = print;
     return print_exp; 
 }
@@ -482,7 +483,15 @@ expr *eval(expr *expression)
     }
     else if (expression->print.type == PRINTING)
     {
-        printf("%s\n", to_concrete(eval(expression->print.exp)));
+        if (expression->print.sameline)
+        {
+            printf("%s", to_concrete(eval(expression->print.exp)));
+
+        }
+        else
+        {
+            printf("%s\n", to_concrete(eval(expression->print.exp)));
+        }
         return expression; 
     }
     else if (expression->sequence.type == SEQUENCE)
@@ -517,26 +526,14 @@ expr *eval(expr *expression)
     }
     else if (expression->forloop.type == FORL)
     {
-        eval(create_assign_node(expression->forloop.varidname, expression->forloop.counter));
         int start = atoi(to_concrete(eval(expression->forloop.start)));
         int end = atoi(to_concrete(eval(expression->forloop.end)));
         int counter = atoi(to_concrete(eval(expression->forloop.counter)));
         int incr = atoi(to_concrete(eval(expression->forloop.incr)));
-        
-        if (end > start && incr > 0 && counter > end)
+
+        for (int i = start; i <= end; i += incr)
         {
-            return expression; 
-        }
-        else if (start > end && incr < 0 && counter < end)
-        {
-            return expression; 
-        }
-        else if (start == end || incr == 0 || (incr < 0 && start < end) || (incr > 0 && start > end))
-        {
-            return expression; 
-        }
-        else
-        {
+            eval(create_assign_node(expression->forloop.varidname, create_int_node(NUM, i)));
             expr *eval_exp = eval(expression->forloop.exp);
             if (eval_exp->breakt.type == BREAK)
             {
@@ -546,10 +543,11 @@ expr *eval(expr *expression)
             {
                 return eval_exp; 
             }
-            
-            expr *new_loop = create_forloop_node(expression->forloop.varidname, expression->forloop.start, expression->forloop.end, expression->forloop.incr, expression->forloop.exp, create_int_node(NUM, counter + incr));
-            eval(new_loop); 
+
+            i = atoi(to_concrete(eval(create_varid_node(expression->forloop.varidname))));
         }
+        
+        return expression; 
     }
     else if (expression->conditional.type == CONDITIONAL)
     {

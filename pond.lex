@@ -21,11 +21,11 @@ DECIMAL     "0"|{digit}*"."{digit}+
 STRING      \"([^\"\\\n]|\\.|\\\n)*\"
 %%
 
-"+"    { return ADD; } 
+"+"    { return ADD; }
 "-"    { return SUB; }
-"*"    { return MUL; }
+"*"    { return MUL; } 
 "/"    { return DIV; }
-"%"|mod    { return MOD; }
+"%"|mod    { return MOD; }  
 "|"    { return ABS; }
 "^"    { return POW; }
 "("    { return LPAR; }
@@ -52,7 +52,9 @@ STRING      \"([^\"\\\n]|\\.|\\\n)*\"
 "not"  { return NOT; }
 "TRUE"  { return TRUE; }
 "FALSE"  { return FALSE; }
-"print" { return PRINT; }
+"print"  { return PRINT; }
+"printn" { return PRINTN; }
+"prints" { return PRINTS; }
 "while" {return WHILE; }
 "stop"|"break"  { return STOP; }
 "and"|"AND"  { return AND; }

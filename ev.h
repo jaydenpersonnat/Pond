@@ -188,6 +188,7 @@ typedef struct PRINTI
 {
     enum types type; 
     struct expr *exp; 
+    bool sameline; 
 }
 PRINTI; 
 
@@ -313,7 +314,7 @@ expr *create_unop_node(enum uops op, expr *exp);
 expr *create_if_node(expr *cond, expr *body, expr *else_c);
 expr *create_break_node(void);
 
-expr *create_print_node(expr *exp);
+expr *create_print_node(expr *exp, bool sameline);
 expr *create_doloop_node(int iterations, expr *exp);
 expr *create_eval_error(char *msg);
 expr *create_seq_node(expr *left, expr *right);
