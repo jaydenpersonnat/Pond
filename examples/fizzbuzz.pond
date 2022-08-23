@@ -1,0 +1,21 @@
+
+
+for i = 1 to 100 incr 1
+{
+    if ((i mod 5 equals 0) and (i mod 3 equals 0))
+    {
+        print("fizzbuzz");
+    }
+    else if (i mod 5 equals 0)
+    {
+        print("buzz");
+    }
+    else if (i mod 3 equals 0)
+    {
+        print("fizz");
+    }
+    else
+    {
+        print(i);
+    }
+}

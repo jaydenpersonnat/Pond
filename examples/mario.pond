@@ -1,0 +1,23 @@
+
+
+while TRUE
+{
+    height = getnum("Enter a height: "); 
+    if (height >= 0 and height <= 30)
+    {
+        break; 
+    }
+};
+
+for row = 0 to height - 1 add 1
+{
+    for x = 0 to height - 1 - row add 1
+    {
+        prints(" ");
+    };
+    for y = 0 to row add 1
+    {
+        prints("#");
+    };
+    print("");
+}

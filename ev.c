@@ -376,7 +376,6 @@ expr *binopeval(BINOP b_exp)
             {
                 return create_eval_error("Evaluation Error: could not exponentiate values - type mismatch");
             }
-
         }
         case EQUALTO : 
             return create_bool_node(BOOL, l->integer.value == r->integer.value? true: false);

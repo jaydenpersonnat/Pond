@@ -121,8 +121,6 @@ binop:
   | exp LISTCONCAT exp {$$ = create_binop_node(LJOIN, $1, $3); } 
  
 
-
-
 exp: NUMBER        { $$ = create_int_node(NUM, $1); }
   | FLOAT         { $$ = create_dec_node(DECIMAL, $1); }
   | TRUE          { $$ = create_bool_node(BOOL, true);}
