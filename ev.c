@@ -426,10 +426,15 @@ expr *binopeval(BINOP b_exp)
             {
                 expr_node *ptr1 = r->explist.list; 
                 int counter = 0;
-                while (counter != pos)
+                while (counter != pos && ptr1 != NULL)
                 {
                     ptr1 = ptr1->next; 
                     counter++; 
+                }
+
+                if (counter != pos)
+                {
+                    return create_eval_error("IndexError: index out of range");
                 }
                 return ptr1->node; 
             }

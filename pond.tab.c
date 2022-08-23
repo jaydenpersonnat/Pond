@@ -2246,11 +2246,30 @@ int main(int argc, char **argv)
 
     yyin = fopen(argv[1], "r"); 
 
+    if (argc != 2)
+    {
+        printf("Usage ./pond filename.pond\n");
+        return 1; 
+    }
+
+    char *tmp = malloc(sizeof(5));
+    for (int i = strlen(argv[1]) - 4, y = 0; i <= strlen(argv[1]); i++, y++)
+    {
+        tmp[y] = argv[1][i];
+    }
+
+    if (strcmp(tmp, "pond") != 0)
+    {
+        printf("file extension must be .pond\n");
+        return 1;
+    }
+    
     if (!yyin)
     {
         printf("no such file %s\n", argv[1]);
         return 1;
     }
+
     yyparse();   
     fclose(yyin);
 }  

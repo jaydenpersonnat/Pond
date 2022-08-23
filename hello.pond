@@ -1,26 +1,2 @@
 
 
-
-while TRUE
-{
-    height = getnum("Enter a height: "); 
-    if (height > 0 and height < 23)
-    {
-        break; 
-    }
-};
-
-
-for x = 0 to height - 1 add 1
-{
-    for y = 0 to height - x - 1 add 1
-    {
-        prints(" ");
-    };
-    for z = 0 to x add 1
-    {
-        prints("#");
-    };
-    print("");
-}
-
